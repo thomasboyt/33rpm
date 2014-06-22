@@ -1,12 +1,17 @@
 (function(global) {
 
   var THIRTY_THREE = 0.003456;  // http://www.wolframalpha.com/input/?i=33rpm+in+radians%2Fms
+  var THIRTY_THREE_DEG = 0.198;  // http://www.wolframalpha.com/input/?i=33rpm+in+degrees%2Fms
   var FORTY_FIVE = 0.004712;  // http://www.wolframalpha.com/input/?i=45rpm+in+radians%2Fms
 
   var Game = function() {
     this.c = new Coquette(this, 'canvas', 600, 600, 'silver');
 
     var record = this.c.entities.create(Record, {});
+    var label = this.c.entities.create(Label, {
+      record: record
+    });
+
     var player = this.c.entities.create(Player, {
       record: record
     });
@@ -18,9 +23,9 @@
       this.c.entities.create(Enemy, {
         record: record,
         lane: Math.floor(Math.random() * 4),
-        angle: -260 * (Math.PI/180)
+        angle: -320 * (Math.PI/180)
       });
-    }.bind(this), 2000);
+    }.bind(this), 1000);
 
     this.score = 0;
   };
@@ -48,7 +53,7 @@
     this.record = opts.record;
 
     this.lane = 0;
-    this.angleFromCenter = -320 * (Math.PI/180);
+    this.angleFromCenter = -300 * (Math.PI/180);
 
     this.size = {
       x: 20,
@@ -82,9 +87,9 @@
 
     // draw a triangle
     ctx.beginPath();
-    ctx.moveTo(this.center.x - this.size.x / 2, this.center.y);
-    ctx.lineTo(this.center.x + this.size.x / 2, this.center.y + this.size.y / 2);
-    ctx.lineTo(this.center.x + this.size.x / 2, this.center.y - this.size.y / 2);
+    ctx.moveTo(this.center.x + this.size.x / 2, this.center.y);
+    ctx.lineTo(this.center.x - this.size.x / 2, this.center.y + this.size.y / 2);
+    ctx.lineTo(this.center.x - this.size.x / 2, this.center.y - this.size.y / 2);
     ctx.fill();
     ctx.closePath();
   };
@@ -93,7 +98,7 @@
     var bullet = this.game.c.entities.create(Bullet, {
       record: this.record,
       lane: this.lane,
-      angleFromCenter: this.angleFromCenter - 5 * (Math.PI/180)
+      angleFromCenter: this.angleFromCenter + 5 * (Math.PI/180)
     });
   };
 
@@ -117,7 +122,7 @@
 
   Bullet.prototype.update = function(step) {
     var overflow = 360 * (Math.PI/180);
-    this.angleFromCenter = (this.angleFromCenter - (FORTY_FIVE * step)) % overflow;
+    this.angleFromCenter = (this.angleFromCenter + (FORTY_FIVE * step)) % overflow;
     this.setPosition();
   };
 
@@ -126,9 +131,9 @@
 
     // draw a triangle
     ctx.beginPath();
-    ctx.moveTo(this.center.x - this.size.x / 2, this.center.y);
-    ctx.lineTo(this.center.x + this.size.x / 2, this.center.y + this.size.y / 2);
-    ctx.lineTo(this.center.x + this.size.x / 2, this.center.y - this.size.y / 2);
+    ctx.moveTo(this.center.x + this.size.x / 2, this.center.y);
+    ctx.lineTo(this.center.x - this.size.x / 2, this.center.y + this.size.y / 2);
+    ctx.lineTo(this.center.x - this.size.x / 2, this.center.y - this.size.y / 2);
     ctx.fill();
     ctx.closePath();
   };
@@ -163,7 +168,7 @@
 
   Enemy.prototype.update = function(step) {
     var overflow = 360 * (Math.PI/180);
-    this.angleFromCenter = (this.angleFromCenter + (THIRTY_THREE * step)) % overflow;
+    this.angleFromCenter = (this.angleFromCenter - (THIRTY_THREE * step)) % overflow;
     this.setPosition();
   };
 
@@ -189,15 +194,18 @@
   var Barrier = function(game, opts) {
     var record = this.record = opts.record;
 
-    this.center = {
-      x: record.center.x + ((this.record.labelRadius + this.record.recordRadius) / 2),
-      y: record.center.y
-    };
+    this.angleFromCenter = -310 * (Math.PI/180);
 
     this.size = {
       x: record.recordRadius - record.labelRadius,
       y: 2
     };
+
+    this.center = {};
+    var r = (this.record.labelRadius + this.record.recordRadius) / 2;
+    this.center.x = record.center.x + r * Math.sin(this.angleFromCenter);
+    this.center.y = record.center.y + r * Math.cos(this.angleFromCenter);
+    this.angle = (-this.angleFromCenter) * (180/Math.PI) + 90;
   };
 
   Barrier.prototype.draw = function(ctx) {
@@ -230,13 +238,6 @@
     ctx.fill();
     ctx.closePath();
 
-    // draw inner label
-    ctx.fillStyle = 'white';
-    ctx.beginPath();
-    ctx.arc(cx, cy, this.labelRadius, 0, 360);
-    ctx.fill();
-    ctx.closePath();
-
     // draw inner vinyl hole
     ctx.fillStyle = 'silver';
     ctx.beginPath();
@@ -253,6 +254,24 @@
       ctx.stroke();
       ctx.closePath();
     }
+  };
+
+
+  var Label = function(game, opts) {
+    this.center = opts.record.center;
+
+    this.imageObj = new Image();
+    this.imageObj.src = '/data/33rpm_1x.png';
+    this.angle = 0;
+  };
+
+  Label.prototype.update = function(step) {
+    var overflow = 360;
+    this.angle = (this.angle + (THIRTY_THREE_DEG * step)) % overflow;
+  };
+
+  Label.prototype.draw = function(ctx) {
+    ctx.drawImage(this.imageObj, this.center.x - this.imageObj.width / 2, this.center.y - this.imageObj.height / 2);
   };
 
   global.Game = Game;
