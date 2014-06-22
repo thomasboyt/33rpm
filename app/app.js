@@ -1,5 +1,13 @@
 (function(global) {
 
+  var degToRad = function(deg) {
+    return deg * (Math.PI/180);
+  };
+
+  var radToDeg = function(rad) {
+    return deg * (180/Math.PI);
+  };
+
   var THIRTY_THREE = 0.003456;  // http://www.wolframalpha.com/input/?i=33rpm+in+radians%2Fms
   var THIRTY_THREE_DEG = 0.198;  // http://www.wolframalpha.com/input/?i=33rpm+in+degrees%2Fms
   var FORTY_FIVE = 0.004712;  // http://www.wolframalpha.com/input/?i=45rpm+in+radians%2Fms
@@ -23,7 +31,7 @@
       this.c.entities.create(Enemy, {
         record: record,
         lane: Math.floor(Math.random() * 4),
-        angle: -320 * (Math.PI/180)
+        angle: barrier.angleFromCenter * (Math.PI/180)
       });
     }.bind(this), 1000);
 
@@ -53,7 +61,7 @@
     this.record = opts.record;
 
     this.lane = 0;
-    this.angleFromCenter = -300 * (Math.PI/180);
+    this.angleFromCenter = -310 * (Math.PI/180);
 
     this.size = {
       x: 20,
@@ -153,12 +161,15 @@
     this.record = opts.record;
 
     this.lane = opts.lane;
-    this.angleFromCenter = opts.angle;
+    this.angleFromCenter = degToRad(opts.angle);
 
     this.size = {
       x: 20,
       y: 20
     };
+
+    // hack that prevents collision detect with barrier right when spawned
+    this.spawnImmunity = true;
 
     this.center = {};
     this.setPosition();
@@ -169,6 +180,9 @@
   Enemy.prototype.update = function(step) {
     var overflow = 360 * (Math.PI/180);
     this.angleFromCenter = (this.angleFromCenter - (THIRTY_THREE * step)) % overflow;
+    if ( this.angleFromCenter < -1 ) {
+      this.spawnImmunity = false;
+    }
     this.setPosition();
   };
 
@@ -186,7 +200,9 @@
     if ( other instanceof Player ) {
       console.log('DEADED');
     } else if ( other instanceof Barrier ) {
-      this.game.c.entities.destroy(this);
+      if ( !this.spawnImmunity ) {
+        this.game.c.entities.destroy(this);
+      }
     }
   };
 
@@ -194,7 +210,7 @@
   var Barrier = function(game, opts) {
     var record = this.record = opts.record;
 
-    this.angleFromCenter = -310 * (Math.PI/180);
+    this.angleFromCenter = 0;
 
     this.size = {
       x: record.recordRadius - record.labelRadius,
@@ -261,7 +277,7 @@
     this.center = opts.record.center;
 
     this.imageObj = new Image();
-    this.imageObj.src = '/data/33rpm_1x.png';
+    this.imageObj.src = 'data/33rpm_1x.png';
     this.angle = 0;
   };
 
