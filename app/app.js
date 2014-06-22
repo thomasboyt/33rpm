@@ -14,6 +14,8 @@
       record: record,
       lane: 1
     });
+
+    this.score = 0;
   };
 
   var Player = function(game, opts) {
@@ -21,7 +23,7 @@
     this.record = opts.record;
 
     this.lane = 0;
-    this.angleFromCenter = 0;
+    this.angleFromCenter = -320 * (Math.PI/180);
 
     this.size = {
       x: 20,
@@ -33,15 +35,15 @@
   };
 
   Player.prototype.update = function(step) {
-    var overflow = 360 * (Math.PI/180);
-    this.angleFromCenter = (this.angleFromCenter - (this.game.rotationSpeed * step)) % overflow;
+    // var overflow = 360 * (Math.PI/180);
+    // this.angleFromCenter = (this.angleFromCenter - (this.game.rotationSpeed * step)) % overflow;
 
     var inputter = this.game.c.inputter;
 
-    if (inputter.isPressed(inputter.RIGHT_ARROW) || inputter.isPressed(inputter.D)) {
+    if (inputter.isPressed(inputter.LEFT_ARROW) || inputter.isPressed(inputter.A)) {
       this.lane += 1;
       if (this.lane > 3) { this.lane = 3; }
-    } else if (inputter.isPressed(inputter.LEFT_ARROW) || inputter.isPressed(inputter.A)) {
+    } else if (inputter.isPressed(inputter.RIGHT_ARROW) || inputter.isPressed(inputter.D)) {
       this.lane -= 1;
       if (this.lane < 0) { this.lane = 0; }
     }
@@ -90,7 +92,16 @@
     };
 
     this.center = {};
+    this.setPosition();
+  };
 
+  Enemy.prototype.update = function(step) {
+    var overflow = 360 * (Math.PI/180);
+    this.angleFromCenter = (this.angleFromCenter + (this.game.rotationSpeed * step)) % overflow;
+    this.setPosition();
+  };
+
+  Enemy.prototype.setPosition = function() {
     var record = this.record;
     var laneOffset = record.recordRadius - (record.laneOffset * this.lane);
     var r = laneOffset - (record.laneOffset / 2);
