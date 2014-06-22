@@ -9,6 +9,11 @@
     var player = this.c.entities.create(Player, {
       record: record
     });
+
+    var enemy = this.c.entities.create(Enemy, {
+      record: record,
+      lane: 1
+    });
   };
 
   var Player = function(game, opts) {
@@ -18,42 +23,88 @@
     this.lane = 0;
     this.angleFromCenter = 0;
 
-    this.width = 20;
-    this.height = this.record.laneOffset / 2;
+    this.size = {
+      x: 20,
+      y: this.record.laneOffset / 2
+    };
+
+    this.center = {};
+    this.setPosition();
   };
 
   Player.prototype.update = function(step) {
     var overflow = 360 * (Math.PI/180);
-    this.angleFromCenter = (this.angleFromCenter + (this.game.rotationSpeed * step)) % overflow;
+    this.angleFromCenter = (this.angleFromCenter - (this.game.rotationSpeed * step)) % overflow;
 
     var inputter = this.game.c.inputter;
-    if (inputter.isPressed(inputter.RIGHT_ARROW)) {
+
+    if (inputter.isPressed(inputter.RIGHT_ARROW) || inputter.isPressed(inputter.D)) {
       this.lane += 1;
       if (this.lane > 3) { this.lane = 3; }
-    } else if (inputter.isPressed(inputter.LEFT_ARROW)) {
+    } else if (inputter.isPressed(inputter.LEFT_ARROW) || inputter.isPressed(inputter.A)) {
       this.lane -= 1;
       if (this.lane < 0) { this.lane = 0; }
     }
+
+    this.setPosition();
+  };
+
+  Player.prototype.setPosition = function() {
+    var record = this.record;
+    var laneOffset = record.recordRadius - (record.laneOffset * this.lane);
+
+    // origin x/y
+    var r = laneOffset - (record.laneOffset / 2);
+
+    this.center.x = record.centerX + r * Math.sin(this.angleFromCenter);
+    this.center.y = record.centerY + r * Math.cos(this.angleFromCenter);
+    this.angle = -this.angleFromCenter * (180/Math.PI);
   };
 
   Player.prototype.draw = function(ctx) {
-    ctx.fillStyle = 'green';
+    ctx.fillStyle = 'limegreen';
+
+    // draw a triangle
     ctx.beginPath();
+    ctx.moveTo(this.center.x - this.size.x / 2, this.center.y);
+    ctx.lineTo(this.center.x + this.size.x / 2, this.center.y + this.size.y / 2);
+    ctx.lineTo(this.center.x + this.size.x / 2, this.center.y - this.size.y / 2);
+    ctx.fill();
+    ctx.closePath();
+  };
+
+  Player.prototype.collision = function(other) {
+    console.log('bam');
+  };
+
+  var Enemy = function(game, opts) {
+    this.game = game;
+    this.record = opts.record;
+
+    this.lane = opts.lane;
+    this.angleFromCenter = 0;
+
+    this.size = {
+      x: 20,
+      y: 20
+    };
+
+    this.center = {};
 
     var record = this.record;
     var laneOffset = record.recordRadius - (record.laneOffset * this.lane);
-    var x = record.centerX;
-    var y = record.centerY + laneOffset - (record.laneOffset / 2);
+    var r = laneOffset - (record.laneOffset / 2);
 
-    // rotate around origin point
-    ctx.translate(record.centerX, record.centerY);
-    ctx.rotate(this.angleFromCenter);
-    ctx.translate(-record.centerX, -record.centerY);
+    this.center.x = record.centerX + r * Math.sin(this.angleFromCenter);
+    this.center.y = record.centerY + r * Math.cos(this.angleFromCenter);
+  };
 
+  Enemy.prototype.draw = function(ctx) {
+    ctx.fillStyle = 'red';
+
+    // draw a triangle
     ctx.beginPath();
-    ctx.moveTo(x - this.width / 2, y);
-    ctx.lineTo(x + this.width / 2, y + this.height / 2);
-    ctx.lineTo(x + this.width / 2, y - this.height / 2);
+    ctx.arc(this.center.x, this.center.y, 10, 0, 360);
     ctx.fill();
     ctx.closePath();
   };
