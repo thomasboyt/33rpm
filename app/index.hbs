@@ -6,12 +6,15 @@
         margin: 0;
         background: #000;
       }
+
       canvas {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        margin-top: -300px;
-        margin-left: -350px;
+        display: block;
+        margin: 40px auto;
+      }
+
+      .what {
+        color: #fff;
+        text-align: center;
       }
     </style>
   </head>
@@ -27,6 +30,9 @@
     {{/if}}
 
     <canvas id="canvas"></canvas>
+    <div class="what">
+      space to start - left/right to move - space to fire - R restarts when you die
+    </div>
 
     <script>
       new Game();
