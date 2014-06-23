@@ -8,10 +8,17 @@ var mergeTrees = require('broccoli-merge-trees');
 
 var IS_PRODUCTION = require('broccoli-env').getEnv() === 'production';
 
-var appJs = pickFiles('app', {
-  srcDir: '/',
-  files: ['**/*.js'],
-  destDir: '/app'
+var makeModules = require('broccoli-es6-module-filter');
+var browserify = require('broccoli-browserify');
+
+var modules = makeModules('app', {
+  moduleType: 'cjs',
+  compatFix: true
+});
+
+var appJs = browserify(modules, {
+  entries: ['./main.js'],
+  outputFile: 'app.js'
 });
 
 var libJs = pickFiles('lib', {
@@ -44,7 +51,7 @@ var data = pickFiles('data/', {
 
 if ( IS_PRODUCTION ) {
   js = concat(js, {
-    inputFiles: ['lib/**/*.js', 'app/**/*.js'],
+    inputFiles: ['lib/**/*.js', 'app.js'],
     outputFile: '/app.min.js'
   });
   app = uglify(js);

@@ -19,6 +19,8 @@
     "broccoli-merge-trees": "~0.1.4",
     "grunt-ssh": "~0.11.2",
     "grunt": "~0.4.5",
-    "load-grunt-tasks": "~0.5.0"
+    "load-grunt-tasks": "~0.5.0",
+    "broccoli-es6-module-filter": "~0.1.9",
+    "broccoli-browserify": "~0.1.0"
   }
 }
