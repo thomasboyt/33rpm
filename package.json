@@ -21,6 +21,8 @@
     "grunt": "~0.4.5",
     "load-grunt-tasks": "~0.5.0",
     "broccoli-es6-module-filter": "~0.1.9",
-    "broccoli-browserify": "~0.1.0"
+    "broccoli-browserify": "~0.1.0",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-broccoli": "git://github.com/thomasboyt/grunt-broccoli#fix-missing-dest"
   }
 }
