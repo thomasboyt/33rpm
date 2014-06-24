@@ -6,7 +6,7 @@ import Player from './entities/player';
 import Record from './entities/record';
 
 var Game = function() {
-  this.c = new Coquette(this, 'canvas', 700, 600, 'silver');
+  this.c = new Coquette(this, 'canvas', 600, 600, 'silver');
 
   this.fsm = StateMachine.create({
     initial: 'attract',
