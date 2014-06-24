@@ -1,9 +1,6 @@
 import c from '../constants';
 import RecordMixin from '../record_mixin';
 
-import Barrier from './barrier';
-import Enemy from './enemy';
-
 var Bullet = function(game, opts) {
   this.game = game;
 
@@ -37,15 +34,6 @@ Bullet.prototype.draw = function(ctx) {
   ctx.lineTo(this.center.x - this.size.x / 2, this.center.y - this.size.y / 2);
   ctx.fill();
   ctx.closePath();
-};
-
-Bullet.prototype.collision = function(other) {
-  if ( other instanceof Enemy ) {
-    this.game.c.entities.destroy(other);
-    this.game.c.entities.destroy(this);
-  } else if ( other instanceof Barrier ) {
-    this.game.c.entities.destroy(this);
-  }
 };
 
 export default Bullet;

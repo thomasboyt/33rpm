@@ -1,3 +1,5 @@
+import Bullet from './bullet';
+
 var Barrier = function(game, opts) {
   var record = this.record = opts.record;
 
@@ -18,6 +20,12 @@ var Barrier = function(game, opts) {
 Barrier.prototype.draw = function(ctx) {
   ctx.fillStyle = '#ff0000';
   ctx.fillRect(this.center.x - this.size.x / 2, this.center.y - this.size.y / 2, this.size.x, this.size.y);
+};
+
+Barrier.prototype.collision = function(other) {
+  if ( other instanceof Bullet ) {
+    this.game.c.entities.destroy(other);
+  }
 };
 
 export default Barrier;

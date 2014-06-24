@@ -2,6 +2,7 @@ import c from '../constants';
 import RecordMixin from '../record_mixin';
 
 import Barrier from './barrier';
+import Bullet from './bullet';
 import Player from './player';
 
 var Enemy = function(game, opts) {
@@ -44,13 +45,16 @@ Enemy.prototype.draw = function(ctx) {
   ctx.closePath();
 };
 
-Enemy.prototype.collision = function(other, type) {
+Enemy.prototype.collision = function(other) {
   if ( other instanceof Player ) {
     this.game.fsm.died();
   } else if ( other instanceof Barrier ) {
     if ( !this.spawnImmunity ) {
       this.game.c.entities.destroy(this);
     }
+  } else if ( other instanceof Bullet ) {
+    this.game.c.entities.destroy(this);
+    this.game.c.entities.destroy(other);
   }
 };
 
