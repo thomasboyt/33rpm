@@ -54,14 +54,16 @@ Enemy.prototype.draw = function(ctx) {
 Enemy.prototype.collision = function(other) {
   if ( other instanceof Player ) {
     this.game.fsm.died();
+
   } else if ( other instanceof Barrier ) {
     if ( !this.hitImmunity ) {
       if ( this.lane === 3) {
-        this.game.c.entities.destroy(this);
+        this.game.fsm.died();
       } else {
         this.moveUpALane();
       }
     }
+
   } else if ( other instanceof Bullet ) {
     this.game.c.entities.destroy(this);
     this.game.c.entities.destroy(other);
