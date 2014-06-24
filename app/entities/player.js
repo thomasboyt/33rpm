@@ -20,19 +20,24 @@ var Player = function(game, opts) {
 
 _.extend(Player.prototype, RecordMixin);
 
-Player.prototype.update = function(step) {
+var curve = BezierEasing(0.42, 0.0, 0.58, 1.0);
+
+Player.prototype.update = function() {
   var inputter = this.game.c.inputter;
 
   if (inputter.isPressed(inputter.LEFT_ARROW) || inputter.isPressed(inputter.A)) {
-    this.lane += 1;
-    if (this.lane > 3) { this.lane = 3; }
+    if ( this.lane < 3 ) {
+      this.moveLaneWithEasingCurve(this.LANE_UP, 25, curve);
+    }
   } else if (inputter.isPressed(inputter.RIGHT_ARROW) || inputter.isPressed(inputter.D)) {
-    this.lane -= 1;
-    if (this.lane < 0) { this.lane = 0; }
+    if ( this.lane > 0 ){
+      this.moveLaneWithEasingCurve(this.LANE_DOWN, 25, curve);
+    }
   } else if (inputter.isPressed(inputter.SPACE)) {
     this.shoot();
   }
 
+  this.handleLaneMovement();
   this.setPosition();
 };
 
@@ -49,9 +54,13 @@ Player.prototype.draw = function(ctx) {
 };
 
 Player.prototype.shoot = function() {
+  // bullets can only be in one lane or another, not in between (even if shot while player
+  // is in between)
+  var roundedLane = Math.round(this.lane);
+
   var bullet = this.game.c.entities.create(Bullet, {
     record: this.record,
-    lane: this.lane,
+    lane: roundedLane,
     angleFromCenter: this.angleFromCenter + 5 * (Math.PI/180)
   });
 };

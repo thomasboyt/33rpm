@@ -22,10 +22,6 @@ var Enemy = function(game, opts) {
 
   this.center = {};
   this.setPosition();
-
-  this.movingUp = false;
-  this.lastLane = undefined;
-  this.startedMoving = undefined;
 };
 
 _.extend(Enemy.prototype, RecordMixin);
