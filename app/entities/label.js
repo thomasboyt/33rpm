@@ -10,7 +10,7 @@ var Label = function(game, opts) {
 
   this.rotSpeed = 0;
   this.rotSpeedMax = c.THIRTY_THREE_DEG;
-  this.rotAccel = 0.3 / 100;
+  this.rotAccel = 0.6 / 1000;
   this.rotDeaccel = 0.3 / 1000;
 };
 
