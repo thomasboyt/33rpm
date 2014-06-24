@@ -27,8 +27,7 @@ var Game = function() {
 
   this.record = this.c.entities.create(Record, {});
   this.label = this.c.entities.create(Label, {
-    record: this.record,
-    paused: true
+    record: this.record
   });
 
 };
@@ -51,8 +50,8 @@ Game.prototype.start = function() {
   }
 
   this.score = 0;
-  this.label.paused = false;
   this.label.angle = 0;
+  this.label.start();
 
   var player = this.c.entities.create(Player, {
     record: this.record
@@ -83,7 +82,7 @@ Game.prototype.died = function() {
   // pause action so you can see that you messed up
   this.destroyAll();
   clearInterval(this.spawner);
-  this.label.paused = true;
+  this.label.stop();
 };
 
 
