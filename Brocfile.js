@@ -54,7 +54,7 @@ if ( IS_PRODUCTION ) {
     inputFiles: ['lib/**/*.js', 'app.js'],
     outputFile: '/app.min.js'
   });
-  app = uglify(js);
+  js = uglify(js);
 }
 
 module.exports = mergeTrees([js, index, data]);
