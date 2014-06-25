@@ -1,4 +1,19 @@
+/**
+ * This mixin is for any entity that exists within a single lane of the record.
+ *
+ * Properties:
+ *   this.angleFromCenter - an angle, in Radians, from the center to rotate by
+ *   this.lane - which lane of the record you're in
+ */
+
 var RecordMixin = {
+
+  /**
+   * Set center.x, center.y and angle of the entity based on angleFromCenter and which lane the
+   * entitiy is in.
+   *
+   * Should be called within update()
+   */
   setPosition: function() {
     if (!this.center) { this.center = {}; }
 
@@ -13,6 +28,10 @@ var RecordMixin = {
     this.angle = -this.angleFromCenter * (180/Math.PI);
   },
 
+  /**
+   * Move the entity between lanes, given a direction (LANE_UP or LANE_DOWN), duration (in ms), and
+   * a curve function generated from BezierEasing()
+   */
   LANE_UP: 'up',
   LANE_DOWN: 'down',
 
@@ -29,6 +48,11 @@ var RecordMixin = {
     this._movementDuration = duration;
   },
 
+  /**
+   * Handle updating the current lane based on the current lane movement speed.
+   *
+   * Should be called within update(), before setPosition()
+   */
   handleLaneMovement: function() {
     if ( this._isMoving ) {
       var p = (Date.now() - this._startedMoving) / this._movementDuration;
