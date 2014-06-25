@@ -10,6 +10,8 @@ import UI from './entities/ui';
 var Game = function() {
   this.c = new Coquette(this, 'canvas', 600, 600, 'silver');
 
+  this.retinaFix();
+
   this.fsm = StateMachine.create({
     initial: 'attract',
     events: [
@@ -99,6 +101,21 @@ Game.prototype.died = function() {
   clearInterval(this.enemySpawner);
   clearInterval(this.targetSpawner);
   this.label.stop();
+};
+
+Game.prototype.retinaFix = function() {
+  if ( window.devicePixelRatio ) {
+    var canvas = document.getElementById('canvas');
+    var prevWidth = canvas.width;
+    var prevHeight = canvas.height;
+
+    canvas.width = prevWidth * window.devicePixelRatio;
+    canvas.height = prevHeight * window.devicePixelRatio;
+    canvas.style.width = prevWidth;
+    canvas.style.height = prevHeight;
+
+    canvas.getContext('2d').scale(window.devicePixelRatio, window.devicePixelRatio);
+  }
 };
 
 
