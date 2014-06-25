@@ -27,6 +27,16 @@
       a, a:visited, a:hover {
         color: white;
       }
+
+      .dot {
+        color: skyblue;
+      }
+      .barrier {
+        color: pink;
+      }
+      .spawner {
+        color: red;
+      }
     </style>
 
     <title>33rpm</title>
@@ -48,9 +58,10 @@
 
       <h2>INSTRUCTIONS</h2>
       <p>
-        shoot the <span style="color: skyblue">dots</span> for points. <br/>
-        avoid the <span style="color: pink">barriers</span>. <br/>
-        when <span style="color: skyblue">dots</span> hit the <span style="color: red">barrier line</span>, they'll move one lane inward.
+        shoot the <span class="dot">dots</span> for points. <br/>
+        avoid the <span class="barrier">barriers</span>. <br/>
+        when <span class="dot">dots</span> hit the <span class="spawner">barrier line</span>, they'll move one lane inward. <br/>
+        if a <span class="dot">dot</span> on the innermost lane hits the <span class="spawner">line</span>, you lose.
       </p>
 
       <h2>CONTROLS</h2>
