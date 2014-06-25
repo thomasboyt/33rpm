@@ -64,6 +64,7 @@ Enemy.prototype.collision = function(other) {
   } else if ( other instanceof Bullet ) {
     this.game.c.entities.destroy(this);
     this.game.c.entities.destroy(other);
+    this.game.score += 1;
   }
 };
 

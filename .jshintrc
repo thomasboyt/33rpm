@@ -17,6 +17,7 @@
   "globals": {
     "_": false,
     "Coquette": false,
-    "StateMachine": false
+    "StateMachine": false,
+    "BezierCurve": false
   }
 }

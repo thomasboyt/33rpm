@@ -4,6 +4,7 @@ import Enemy from './entities/enemy';
 import Label from './entities/label';
 import Player from './entities/player';
 import Record from './entities/record';
+import UI from './entities/ui';
 
 var Game = function() {
   this.c = new Coquette(this, 'canvas', 600, 600, 'silver');
@@ -29,6 +30,8 @@ var Game = function() {
   this.label = this.c.entities.create(Label, {
     record: this.record
   });
+
+  this.c.entities.create(UI, {});
 
 };
 

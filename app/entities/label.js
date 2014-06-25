@@ -5,6 +5,7 @@ var Label = function(game, opts) {
   this.paused = opts.paused;
 
   this.imageObj = new Image();
+  // TODO: load retina when appropriate
   this.imageObj.src = 'data/33rpm_1x.png';
   this.angle = 0;
 

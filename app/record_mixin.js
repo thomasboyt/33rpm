@@ -15,6 +15,7 @@ var RecordMixin = {
 
   LANE_UP: 'up',
   LANE_DOWN: 'down',
+
   moveLaneWithEasingCurve: function(dir, duration, curve) {
     if ( dir !== this.LANE_UP && dir !== this.LANE_DOWN ) {
       throw new Error('please pass this.LANE_UP or this.LANE_DOWN for direction');
