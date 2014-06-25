@@ -34,6 +34,6 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('build', ['clean:build', 'broccoli:dist:build']);
-  grunt.registerTask('deploy', ['build', 'sftp:dist']);
+  grunt.registerTask('dist', ['clean:build', 'broccoli:dist:build']);
+  grunt.registerTask('deploy', ['dist', 'sftp:dist']);
 };
