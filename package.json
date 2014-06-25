@@ -1,11 +1,7 @@
 {
-  "name": "thugs",
+  "name": "33rpm",
   "version": "0.0.0",
   "description": "",
-  "scripts": {
-    "clean": "rm -r build",
-    "dist": "BROCCOLI_ENV=production broccoli build build"
-  },
   "private": true,
   "author": "",
   "license": "BSD-2-Clause",
