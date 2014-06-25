@@ -16,6 +16,17 @@
         color: #fff;
         text-align: center;
       }
+
+      h2 {
+        font-size: 16px;
+        margin-bottom: 2px;
+      }
+      p {
+        margin-top: 0;
+      }
+      a, a:visited, a:hover {
+        color: white;
+      }
     </style>
 
     <title>33rpm</title>
@@ -34,11 +45,22 @@
 
     <canvas id="canvas"></canvas>
     <div class="what">
-      <strong>INSTRUCTIONS</strong> <br />
-      shoot the <span style="color: red">enemies</span>. when they hit the <span style="color: red">barrier line</span>, they'll move one lane inward. <br/>
-      if an enemy on the innermost lane hits the <span style="color: red">line</span>, you lose.<br/><br/>
-      <strong>CONTROLS</strong> <br />
-      space to start - left/right to move - space to fire - R restarts when you die
+
+      <h2>INSTRUCTIONS</h2>
+      <p>
+        shoot the <span style="color: red">enemies</span>. when they hit the <span style="color: red">barrier line</span>, they'll move one lane inward. <br/>
+        if an enemy on the innermost lane hits the <span style="color: red">line</span>, you lose.
+      </p>
+
+      <h2>CONTROLS</h2>
+      <p>
+        left/right to move - space to fire
+      </p>
+
+      <h2>SOURCE</h2>
+      <p>
+        <a href="https://github.com/thomasboyt/33rpm">https://github.com/thomasboyt/33rpm</a>
+      </p>
     </div>
 
     <script>
