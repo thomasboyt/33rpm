@@ -1,6 +1,7 @@
 import Barrier from './entities/barrier';
 import Bullet from './entities/bullet';
 import Enemy from './entities/enemy';
+import Target from './entities/target';
 import Label from './entities/label';
 import Player from './entities/player';
 import Record from './entities/record';
@@ -63,17 +64,28 @@ Game.prototype.start = function() {
     record: this.record
   });
 
-  this.spawner = setInterval(function() {
+  // TODO: spawners should be better-managed
+  this.enemySpawner = setInterval(function() {
     this.c.entities.create(Enemy, {
       record: this.record,
       lane: Math.floor(Math.random() * 4),
       angle: this.barrier.angleFromCenter * (Math.PI/180)
     });
   }.bind(this), 1000);
+
+  setTimeout(function() {
+    this.targetSpawner = setInterval(function() {
+      this.c.entities.create(Target, {
+        record: this.record,
+        lane: Math.floor(Math.random() * 4),
+        angle: this.barrier.angleFromCenter * (Math.PI/180)
+      });
+    }.bind(this), 2000);
+  }.bind(this), 500);
 };
 
 Game.prototype.destroyAll = function() {
-  [Player, Enemy, Bullet].forEach(function(constructor) {
+  [Player, Enemy, Bullet, Target].forEach(function(constructor) {
     var items = this.c.entities.all(constructor);
     items.forEach(function(item) {
       this.c.entities.destroy(item);
@@ -84,7 +96,8 @@ Game.prototype.destroyAll = function() {
 Game.prototype.died = function() {
   // pause action so you can see that you messed up
   this.destroyAll();
-  clearInterval(this.spawner);
+  clearInterval(this.enemySpawner);
+  clearInterval(this.targetSpawner);
   this.label.stop();
 };
 

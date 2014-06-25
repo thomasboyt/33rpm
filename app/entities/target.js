@@ -2,6 +2,7 @@ import c from '../constants';
 import RecordMixin from '../record_mixin';
 
 import Barrier from './barrier';
+import Bullet from './bullet';
 import Player from './player';
 
 var Enemy = function(game, opts) {
@@ -12,8 +13,8 @@ var Enemy = function(game, opts) {
   this.angleFromCenter = opts.angle * (Math.PI/180);
 
   this.size = {
-    y: this.record.laneOffset,
-    x: 4
+    x: 20,
+    y: 20
   };
 
   // hack that prevents collision detect with barrier right when spawned
@@ -34,18 +35,17 @@ Enemy.prototype.update = function(step) {
     this.hitImmunity = false;
   }
 
+  this.handleLaneMovement();
+
   this.setPosition();
 };
 
 Enemy.prototype.draw = function(ctx) {
-  ctx.fillStyle = 'pink';
+  ctx.fillStyle = 'skyblue';
 
-  // draw an evil line
+  // draw a triangle
   ctx.beginPath();
-  ctx.fillRect(this.center.x - this.size.x / 2,
-               this.center.y - this.size.y / 2,
-               this.size.x,
-               this.size.y);
+  ctx.arc(this.center.x, this.center.y, 10, 0, 360);
   ctx.fill();
   ctx.closePath();
 };
@@ -54,12 +54,26 @@ Enemy.prototype.collision = function(other) {
 
   if ( other instanceof Barrier ) {
     if ( !this.hitImmunity ) {
-      this.game.c.entities.destroy(this);
+      if ( this.lane === 3) {
+        this.game.c.entities.destroy(this);
+      } else {
+        this.moveUpALane();
+      }
     }
 
-  } else if ( other instanceof Player ) {
-    this.game.fsm.died();
+  } else if ( other instanceof Bullet ) {
+    this.game.c.entities.destroy(this);
+    this.game.c.entities.destroy(other);
+    this.game.score += 1;
   }
+};
+
+var curve = BezierEasing(0.42, 0.0, 0.58, 1.0);
+
+Enemy.prototype.moveUpALane = function() {
+  // continued hackery :|
+  this.hitImmunity = true;
+  this.moveLaneWithEasingCurve(this.LANE_UP, 200, curve);
 };
 
 export default Enemy;
