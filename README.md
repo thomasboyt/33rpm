@@ -12,4 +12,4 @@ Sorry! I hope it gets better soon. I'm working on it: https://trello.com/b/JeQa7
 
 ## Well what's it made with
 
-[Coquette](http://coquette.maryrosecook.com/), an awesome microframework for JavaScript games, and a cavalade of build tools I don't really want to get into now.
+[Coquette](http://coquette.maryrosecook.com/), an awesome microframework for JavaScript games, and a cavalcade of build tools I don't really want to get into now.
