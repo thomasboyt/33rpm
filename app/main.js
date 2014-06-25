@@ -36,6 +36,11 @@ var Game = function() {
 
   this.c.entities.create(UI, {});
 
+
+  this.enemySpawnFrequency = 1000;
+  this.targetSpawnFrequency = 2000;
+  this.targetSpawnOffset = 500;
+
 };
 
 Game.prototype.update = function(dt) {
@@ -66,24 +71,37 @@ Game.prototype.start = function() {
     record: this.record
   });
 
-  // TODO: spawners should be better-managed
-  this.enemySpawner = setInterval(function() {
-    this.c.entities.create(Enemy, {
-      record: this.record,
-      lane: Math.floor(Math.random() * 4),
-      angle: this.barrier.angleFromCenter * (Math.PI/180)
-    });
-  }.bind(this), 1000);
+  this.createSpawners();
+};
+
+Game.prototype.createSpawners = function() {
+  this._spawners = [];
+
+  var enemySpawner = setInterval(function() {
+    this.createRandomEntity(Enemy);
+  }.bind(this), this.targetSpawnFrequency);
+
+  this._spawners.push(enemySpawner);
 
   setTimeout(function() {
-    this.targetSpawner = setInterval(function() {
-      this.c.entities.create(Target, {
-        record: this.record,
-        lane: Math.floor(Math.random() * 4),
-        angle: this.barrier.angleFromCenter * (Math.PI/180)
-      });
-    }.bind(this), 2000);
-  }.bind(this), 500);
+    var targetSpawner = setInterval(function() {
+      this.createRandomEntity(Target);
+    }.bind(this), this.enemySpawnFrequency);
+
+    this._spawners.push(targetSpawner);
+  }.bind(this), this.targetSpawnOffset);
+};
+
+Game.prototype.clearSpawners = function() {
+  this._spawners.forEach(clearInterval);
+};
+
+Game.prototype.createRandomEntity = function(Entity) {
+  this.c.entities.create(Entity, {
+    record: this.record,
+    lane: Math.floor(Math.random() * 4),
+    angle: this.barrier.angleFromCenter * (Math.PI/180)
+  });
 };
 
 Game.prototype.destroyAll = function() {
@@ -98,8 +116,7 @@ Game.prototype.destroyAll = function() {
 Game.prototype.died = function() {
   // pause action so you can see that you messed up
   this.destroyAll();
-  clearInterval(this.enemySpawner);
-  clearInterval(this.targetSpawner);
+  this.clearSpawners();
   this.label.stop();
 };
 
