@@ -59,10 +59,6 @@ var Game = function() {
       this.fsm.loaded();
     }.bind(this));
   }.bind(this);
-
-  this.enemySpawnFrequency = 1000;
-  this.targetSpawnFrequency = 2000;
-  this.targetSpawnOffset = 500;
 };
 
 Game.prototype.attract = function() {
