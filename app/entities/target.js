@@ -6,7 +6,7 @@ import Bullet from './bullet';
 
 var Enemy = function(game, opts) {
   this.game = game;
-  this.record = opts.record;
+  this.record = game.record;
 
   this.lane = opts.lane;
   this.angleFromCenter = opts.angle * (Math.PI/180);

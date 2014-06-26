@@ -1,8 +1,7 @@
 import c from '../constants';
 
-var Label = function(game, opts) {
-  this.center = opts.record.center;
-  this.paused = opts.paused;
+var Label = function(game) {
+  this.center = game.record.center;
 
   this.imageObj = game.assets.images['label'];
   this.imageX = this.center.x - this.imageObj.width / 2 + 0.5;

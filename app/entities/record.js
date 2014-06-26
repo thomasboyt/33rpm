@@ -1,4 +1,4 @@
-var Record = function(game, opts) {
+var Record = function() {
   this.center = {
     x: 300,
     y: 300

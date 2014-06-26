@@ -2,9 +2,9 @@ import RecordMixin from './mixins/record_mixin';
 
 import Bullet from './bullet';
 
-var Player = function(game, opts) {
+var Player = function(game) {
   this.game = game;
-  this.record = opts.record;
+  this.record = game.record;
 
   this.lane = 0;
   this.angleFromCenter = -310 * (Math.PI/180);

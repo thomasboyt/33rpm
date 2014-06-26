@@ -1,9 +1,9 @@
 import Bullet from './bullet';
 
-var Barrier = function(game, opts) {
+var Barrier = function(game) {
   this.game = game;
 
-  var record = this.record = opts.record;
+  var record = this.record = game.record;
 
   this.angleFromCenter = 0;
 

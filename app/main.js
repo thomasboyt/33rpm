@@ -96,15 +96,9 @@ Game.prototype.start = function() {
   this.label.angle = 0;
   this.label.start();
 
-  this.player = this.c.entities.create(Player, {
-    record: this.record
-  });
-  this.barrier = this.c.entities.create(Barrier, {
-    record: this.record
-  });
-  this.spawner = this.c.entities.create(Spawner, {
-    record: this.record
-  });
+  this.player = this.c.entities.create(Player);
+  this.barrier = this.c.entities.create(Barrier);
+  this.spawner = this.c.entities.create(Spawner);
 };
 
 Game.prototype.destroyAll = function() {

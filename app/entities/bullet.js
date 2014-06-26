@@ -4,7 +4,7 @@ import RecordMixin from './mixins/record_mixin';
 var Bullet = function(game, opts) {
   this.game = game;
 
-  this.record = opts.record;
+  this.record = game.record;
   this.lane = opts.lane;
   this.angleFromCenter = opts.angleFromCenter;
 
