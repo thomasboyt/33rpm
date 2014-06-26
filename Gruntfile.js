@@ -17,23 +17,32 @@ module.exports = function(grunt) {
     },
 
     sftp: {
-      dist: {
+      options: {
+        path: '<%= secret.path %>',
+        host: '<%= secret.host %>',
+        username: '<%= secret.username %>',
+        password: '<%= secret.password %>',
+        showProgress: true,
+        srcBasePath: 'build/',
+        createDirectories: true
+      },
+
+      game: {
         files: {
-          './': 'build/**',
-        },
-        options: {
-          path: '<%= secret.path %>',
-          host: '<%= secret.host %>',
-          username: '<%= secret.username %>',
-          password: '<%= secret.password %>',
-          showProgress: true,
-          srcBasePath: 'build/',
-          createDirectories: true
+          './': ['build/**', '!build/data/**']
+        }
+      },
+
+      data: {
+        files: {
+          './': ['build/data/**']
         }
       }
     }
   });
 
   grunt.registerTask('dist', ['clean:build', 'broccoli:dist:build']);
-  grunt.registerTask('deploy', ['dist', 'sftp:dist']);
+
+  grunt.registerTask('deploy', ['dist', 'sftp:game']);
+  grunt.registerTask('deploy:all', ['dist', 'sftp']);
 };
