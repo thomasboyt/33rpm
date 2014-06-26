@@ -4,9 +4,9 @@ var Label = function(game, opts) {
   this.center = opts.record.center;
   this.paused = opts.paused;
 
-  this.imageObj = new Image();
-  // TODO: load retina when appropriate
-  this.imageObj.src = 'data/33rpm_1x.png';
+  this.imageObj = game.assets.images['label'];
+  this.imageX = this.center.x - this.imageObj.width / 2 + 0.5;
+  this.imageY = this.center.y - this.imageObj.height / 2 + 0.5;
   this.angle = 0;
 
   this.rotSpeed = 0;
@@ -45,12 +45,7 @@ Label.prototype.update = function(step) {
 };
 
 Label.prototype.draw = function(ctx) {
-  ctx.drawImage(this.imageObj,
-                // TODO: we do this calc here so that it'll Just Work once imageObj loads, but would
-                // save perf if we just calc'd this once when imageObj loads and didn't draw
-                // otherwise
-                this.center.x - this.imageObj.width / 2 + 0.5,
-                this.center.y - this.imageObj.height / 2 + 0.5);
+  ctx.drawImage(this.imageObj, this.imageX, this.imageY);
 };
 
 export default Label;

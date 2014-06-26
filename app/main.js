@@ -7,20 +7,25 @@ import Player from './entities/player';
 import Record from './entities/record';
 import UI from './entities/ui';
 
+import assets from './assets';
+import AssetPreloader from './asset_preloader';
+
 var Game = function() {
   this.c = new Coquette(this, 'canvas', 600, 600, 'silver');
 
   this.retinaFix();
 
   this.fsm = StateMachine.create({
-    initial: 'attract',
+    initial: 'loading',
     events: [
+      { name: 'loaded', from: ['loading'], to: 'attract' },
       { name: 'start', from: ['attract', 'dead'], to: 'playing' },
       { name: 'died', from: 'playing', to: 'dead' },
       { name: 'pause', from: 'playing', to: 'paused' },
       { name: 'unpause', from: 'paused', to: 'playing' }
     ],
     callbacks: {
+      onenterattract: this.attract.bind(this),
       onenterplaying: this.start.bind(this),
       ondied: this.died.bind(this),
       onenterstate: function(e, f, t) {
@@ -29,18 +34,24 @@ var Game = function() {
     }
   });
 
-  this.record = this.c.entities.create(Record, {});
-  this.label = this.c.entities.create(Label, {
-    record: this.record
-  });
-
   this.c.entities.create(UI, {});
 
+  var preloader = new AssetPreloader(assets);
+  preloader.onLoaded = function(assets) {
+    this.assets = assets;
+    this.fsm.loaded();
+  }.bind(this);
 
   this.enemySpawnFrequency = 1000;
   this.targetSpawnFrequency = 2000;
   this.targetSpawnOffset = 500;
+};
 
+Game.prototype.attract = function() {
+  this.record = this.c.entities.create(Record, {});
+  this.label = this.c.entities.create(Label, {
+    record: this.record
+  });
 };
 
 Game.prototype.update = function(dt) {
