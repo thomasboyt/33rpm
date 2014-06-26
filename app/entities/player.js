@@ -53,16 +53,16 @@ Player.prototype.draw = function(ctx) {
   ctx.closePath();
 };
 
-Player.prototype.shoot = function() {
+Player.prototype.shoot = _.throttle(function() {
   // bullets can only be in one lane or another, not in between (even if shot while player
   // is in between)
   var roundedLane = Math.round(this.lane);
 
-  var bullet = this.game.c.entities.create(Bullet, {
+  this.game.c.entities.create(Bullet, {
     record: this.record,
     lane: roundedLane,
     angleFromCenter: this.angleFromCenter + 5 * (Math.PI/180)
   });
-};
+}, 500);
 
 export default Player;
