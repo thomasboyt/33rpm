@@ -10,11 +10,12 @@ import Target from './entities/target';
 import UI from './entities/ui';
 
 // Assets
-import AssetPreloader from './util/asset_preloader';
+import assetPreloader from './util/asset_preloader';
 import assets from './assets';
 
 // Misc
 import retinaFix from './util/retina_fix';
+import MusicManager from './util/music_manager';
 
 
 var Game = function() {
@@ -45,20 +46,17 @@ var Game = function() {
 
   this.c.entities.create(UI, {});
 
-  var preloader = new AssetPreloader(assets);
-  preloader.onLoaded = function(assets) {
+  assetPreloader(assets, function(assets) {
     this.assets = assets;
+    var audio = this.assets.audio['mirrorball'];
 
-    this.audioCtx.decodeAudioData(this.assets.audio['mirrorball'], function(buf) {
-      var src = this.audioCtx.createBufferSource();
-      src.connect(this.audioCtx.destination);
-      src.buffer = buf;
-
-      this.songSrc = src;
-
-      this.fsm.loaded();
-    }.bind(this));
-  }.bind(this);
+    this.musicManager = new MusicManager({
+      audio: audio,
+      segments: [38, 104],
+      ctx: this.audioCtx,
+      loadedCb: this.fsm.loaded.bind(this.fsm)
+    });
+  }.bind(this));
 };
 
 Game.prototype.attract = function() {
@@ -80,13 +78,8 @@ Game.prototype.update = function() {
   }
 };
 
-Game.prototype.playMusic = function() {
-  var song = this.songSrc;
-  song.start();
-};
-
 Game.prototype.start = function() {
-  this.playMusic();
+  this.musicManager.playNextSegment();
 
   if (this.barrier) {
     this.c.entities.destroy(this.barrier);
@@ -115,6 +108,7 @@ Game.prototype.died = function() {
   this.destroyAll();
   this.spawner.clear();
   this.label.stop();
+  this.musicManager.stop();
 };
 
 
