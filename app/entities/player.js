@@ -63,6 +63,6 @@ Player.prototype.shoot = _.throttle(function() {
     lane: roundedLane,
     angleFromCenter: this.angleFromCenter + 5 * (Math.PI/180)
   });
-}, 500);
+}, 250);
 
 export default Player;
