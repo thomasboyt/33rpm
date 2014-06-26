@@ -1,4 +1,4 @@
-import RecordMixin from '../record_mixin';
+import RecordMixin from './mixins/record_mixin';
 
 import Bullet from './bullet';
 

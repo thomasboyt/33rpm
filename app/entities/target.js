@@ -1,5 +1,5 @@
 import c from '../constants';
-import RecordMixin from '../record_mixin';
+import RecordMixin from './mixins/record_mixin';
 
 import Barrier from './barrier';
 import Bullet from './bullet';

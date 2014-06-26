@@ -19,6 +19,7 @@
     "Coquette": false,
     "StateMachine": false,
     "BezierEasing": false,
-    "Dancer": false
+    "Dancer": false,
+    "AudioContext": false
   }
 }

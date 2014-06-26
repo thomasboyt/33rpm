@@ -1,19 +1,26 @@
+// Entities
 import Barrier from './entities/barrier';
 import Bullet from './entities/bullet';
 import Enemy from './entities/enemy';
-import Target from './entities/target';
 import Label from './entities/label';
 import Player from './entities/player';
 import Record from './entities/record';
+import Spawner from './entities/spawner';
+import Target from './entities/target';
 import UI from './entities/ui';
 
+// Assets
+import AssetPreloader from './util/asset_preloader';
 import assets from './assets';
-import AssetPreloader from './asset_preloader';
+
+// Misc
+import retinaFix from './util/retina_fix';
+
 
 var Game = function() {
   this.c = new Coquette(this, 'canvas', 600, 600, 'silver');
 
-  this.retinaFix();
+  retinaFix(document.getElementById('canvas'));
 
   this.audioCtx = new AudioContext();
 
@@ -63,10 +70,9 @@ Game.prototype.attract = function() {
   this.label = this.c.entities.create(Label, {
     record: this.record
   });
-
 };
 
-Game.prototype.update = function(dt) {
+Game.prototype.update = function() {
   if (this.fsm.is("attract")) {
     if (this.c.inputter.isPressed(this.c.inputter.SPACE)) {
       setTimeout(this.fsm.start.bind(this.fsm), 0);
@@ -78,9 +84,13 @@ Game.prototype.update = function(dt) {
   }
 };
 
+Game.prototype.playMusic = function() {
+  var song = this.songSrc;
+  song.start();
+};
+
 Game.prototype.start = function() {
-  this.songSrc.noteOn(0);
-  this.songSrc.playbackRate.value = 1;
+  this.playMusic();
 
   if (this.barrier) {
     this.c.entities.destroy(this.barrier);
@@ -90,43 +100,14 @@ Game.prototype.start = function() {
   this.label.angle = 0;
   this.label.start();
 
-  var player = this.c.entities.create(Player, {
+  this.player = this.c.entities.create(Player, {
     record: this.record
   });
   this.barrier = this.c.entities.create(Barrier, {
     record: this.record
   });
-
-  this.createSpawners();
-};
-
-Game.prototype.createSpawners = function() {
-  this._spawners = [];
-
-  var enemySpawner = setInterval(function() {
-    this.createRandomEntity(Enemy);
-  }.bind(this), this.targetSpawnFrequency);
-
-  this._spawners.push(enemySpawner);
-
-  setTimeout(function() {
-    var targetSpawner = setInterval(function() {
-      this.createRandomEntity(Target);
-    }.bind(this), this.enemySpawnFrequency);
-
-    this._spawners.push(targetSpawner);
-  }.bind(this), this.targetSpawnOffset);
-};
-
-Game.prototype.clearSpawners = function() {
-  this._spawners.forEach(clearInterval);
-};
-
-Game.prototype.createRandomEntity = function(Entity) {
-  this.c.entities.create(Entity, {
-    record: this.record,
-    lane: Math.floor(Math.random() * 4),
-    angle: this.barrier.angleFromCenter * (Math.PI/180)
+  this.spawner = this.c.entities.create(Spawner, {
+    record: this.record
   });
 };
 
@@ -142,23 +123,8 @@ Game.prototype.destroyAll = function() {
 Game.prototype.died = function() {
   // pause action so you can see that you messed up
   this.destroyAll();
-  this.clearSpawners();
+  this.spawner.clear();
   this.label.stop();
-};
-
-Game.prototype.retinaFix = function() {
-  if ( window.devicePixelRatio ) {
-    var canvas = document.getElementById('canvas');
-    var prevWidth = canvas.width;
-    var prevHeight = canvas.height;
-
-    canvas.width = prevWidth * window.devicePixelRatio;
-    canvas.height = prevHeight * window.devicePixelRatio;
-    canvas.style.width = prevWidth;
-    canvas.style.height = prevHeight;
-
-    canvas.getContext('2d').scale(window.devicePixelRatio, window.devicePixelRatio);
-  }
 };
 
 
