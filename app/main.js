@@ -15,6 +15,8 @@ var Game = function() {
 
   this.retinaFix();
 
+  this.audioCtx = new AudioContext();
+
   this.fsm = StateMachine.create({
     initial: 'loading',
     events: [
@@ -39,7 +41,16 @@ var Game = function() {
   var preloader = new AssetPreloader(assets);
   preloader.onLoaded = function(assets) {
     this.assets = assets;
-    this.fsm.loaded();
+
+    this.audioCtx.decodeAudioData(this.assets.audio['mirrorball'], function(buf) {
+      var src = this.audioCtx.createBufferSource();
+      src.connect(this.audioCtx.destination);
+      src.buffer = buf;
+
+      this.songSrc = src;
+
+      this.fsm.loaded();
+    }.bind(this));
   }.bind(this);
 
   this.enemySpawnFrequency = 1000;
@@ -52,6 +63,7 @@ Game.prototype.attract = function() {
   this.label = this.c.entities.create(Label, {
     record: this.record
   });
+
 };
 
 Game.prototype.update = function(dt) {
@@ -67,6 +79,9 @@ Game.prototype.update = function(dt) {
 };
 
 Game.prototype.start = function() {
+  this.songSrc.noteOn(0);
+  this.songSrc.playbackRate.value = 1;
+
   if (this.barrier) {
     this.c.entities.destroy(this.barrier);
   }
