@@ -58,9 +58,6 @@ Enemy.prototype.collision = function(other) {
       this.game.c.entities.destroy(this);
     }
 
-  } else if ( other instanceof Bullet ) {
-    this.game.c.entities.destroy(other);
-
   } else if ( other instanceof Player ) {
     this.game.fsm.died();
   }
