@@ -110,7 +110,7 @@ Game.prototype.start = function() {
 };
 
 Game.prototype.destroyAll = function() {
-  [Player, Enemy, Bullet, Target].forEach(function(constructor) {
+  [Player, Enemy, Bullet, Target, Spawner].forEach(function(constructor) {
     var items = this.c.entities.all(constructor);
     items.forEach(function(item) {
       this.c.entities.destroy(item);
@@ -120,7 +120,6 @@ Game.prototype.destroyAll = function() {
 
 Game.prototype.died = function() {
   this.destroyAll();
-  this.spawner.clear();
   this.label.stop();
   this.musicManager.stop();
 };

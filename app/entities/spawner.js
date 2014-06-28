@@ -1,23 +1,37 @@
 import Enemy from './enemy';
 
 var Spawner = function(game) {
-  this.c = game.c;
+  this.game = game;
   this.record = game.record;
   this.barrier = game.barrier;
 
-  this.enemySpawnFrequency = 800;
+  this._spawnFrequency = 1200;
 
-  this._spawners = [];
-
-  var enemySpawner = setInterval(function() {
-    this.createRandomEntity(Enemy);
-  }.bind(this), this.enemySpawnFrequency);
-
-  this._spawners.push(enemySpawner);
+  this._lastSpawnTime = Date.now();
+  this._active = true;
+  this._lastIncrease = 0;
 };
 
-Spawner.prototype.clear = function() {
-  this._spawners.forEach(clearInterval);
+Spawner.prototype.update = function() {
+  if ( this._active ) {
+    var now = Date.now();
+    if ( now > this._lastSpawnTime + this._spawnFrequency) {
+      this._lastSpawnTime = now;
+      this.spawn();
+    }
+  }
+
+  if ( this.game.score > this._lastIncrease &&
+       this.game.score % 5 === 0 &&
+       this._spawnFrequency > 500 ) {
+    this._spawnFrequency -= 100;
+    this._lastIncrease = this.game.score;
+    console.log(this._spawnFrequency);
+  }
+};
+
+Spawner.prototype.spawn = function() {
+  this.createRandomEntity(Enemy);
 };
 
 Spawner.prototype.createRandomEntity = function(Entity) {
@@ -29,7 +43,7 @@ Spawner.prototype.createRandomEntity = function(Entity) {
     var lane = _.sample(lanesOpen, 1);
     lanesOpen = _.without(lanesOpen, lane);
 
-    this.c.entities.create(Entity, {
+    this.game.c.entities.create(Entity, {
       record: this.record,
       lane: lane,
       angle: this.barrier.angleFromCenter * (Math.PI/180)
