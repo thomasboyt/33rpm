@@ -1,6 +1,8 @@
 import c from '../constants';
 
 var Label = function(game) {
+  this.game = game;
+
   this.center = game.record.center;
 
   this.imageObj = game.assets.images['label'];
@@ -40,7 +42,11 @@ Label.prototype.update = function(step) {
     }
   }
 
-  this.angle = (this.angle + (this.rotSpeed * step)) % 360;
+  this.angle = (this.angle + (this.rotSpeed * step));
+  if ( this.angle > 360 ) {
+    this.game.score++;
+    this.angle = this.angle % 360;
+  }
 };
 
 Label.prototype.draw = function(ctx) {

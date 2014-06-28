@@ -33,8 +33,6 @@ Player.prototype.update = function() {
     if ( this.lane > 0 ){
       this.moveLaneWithEasingCurve(this.LANE_DOWN, 25, curve);
     }
-  } else if (inputter.isPressed(inputter.SPACE)) {
-    this.shoot();
   }
 
   this.handleLaneMovement();
@@ -52,17 +50,5 @@ Player.prototype.draw = function(ctx) {
   ctx.fill();
   ctx.closePath();
 };
-
-Player.prototype.shoot = _.throttle(function() {
-  // bullets can only be in one lane or another, not in between (even if shot while player
-  // is in between)
-  var roundedLane = Math.round(this.lane);
-
-  this.game.c.entities.create(Bullet, {
-    record: this.record,
-    lane: roundedLane,
-    angleFromCenter: this.angleFromCenter + 5 * (Math.PI/180)
-  });
-}, 250);
 
 export default Player;
