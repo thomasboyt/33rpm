@@ -37,10 +37,10 @@ Spawner.prototype.spawn = function() {
 Spawner.prototype.createRandomEntity = function(Entity) {
   var lanesOpen = [0, 1, 2, 3];
 
-  var numToSpawn = Math.floor(Math.random() * 3) + 1;
+  var numToSpawn = Math.floor(Math.random() * 2) + 2;
 
   for (var i = 0; i < numToSpawn; i++) {
-    var lane = _.sample(lanesOpen, 1);
+    var lane = _.sample(lanesOpen, 1)[0];
     lanesOpen = _.without(lanesOpen, lane);
 
     this.game.c.entities.create(Entity, {
