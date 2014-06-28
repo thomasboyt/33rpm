@@ -32,8 +32,8 @@ Spawner.prototype.update = function() {
 
   if ( this.game.score > this._lastIncrease &&
        this.game.score % 5 === 0 &&
-       this._spawnFrequency > 500 ) {
-    this._spawnFrequency -= 100;
+       this._baseSpawnOffset > 500 ) {
+    this._baseSpawnOffset -= 100;
     this._lastIncrease = this.game.score;
   }
 };
