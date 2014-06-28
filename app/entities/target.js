@@ -53,11 +53,7 @@ Enemy.prototype.collision = function(other) {
 
   if ( other instanceof Barrier ) {
     if ( !this.hitImmunity ) {
-      if ( this.lane === 3) {
-        this.game.fsm.died();
-      } else {
-        this.moveUpALane();
-      }
+      this.game.fsm.died();
     }
 
   } else if ( other instanceof Bullet ) {
@@ -65,14 +61,6 @@ Enemy.prototype.collision = function(other) {
     this.game.c.entities.destroy(other);
     this.game.score += 1;
   }
-};
-
-var curve = BezierEasing(0.42, 0.0, 0.58, 1.0);
-
-Enemy.prototype.moveUpALane = function() {
-  // continued hackery :|
-  this.hitImmunity = true;
-  this.moveLaneWithEasingCurve(this.LANE_UP, 200, curve);
 };
 
 export default Enemy;
