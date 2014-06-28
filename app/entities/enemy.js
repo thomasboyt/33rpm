@@ -55,7 +55,7 @@ Enemy.prototype.draw = function(ctx) {
 };
 
 Enemy.prototype.collision = function(other) {
-  if ( other instanceof Player ) {
+  if ( other instanceof Player && ( !window.thirtyThree.godMode )) {
     this.game.fsm.died();
   }
 };

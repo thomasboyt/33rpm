@@ -1,3 +1,5 @@
+import './globals';
+
 // Entities
 import Barrier from './entities/barrier';
 import Bullet from './entities/bullet';

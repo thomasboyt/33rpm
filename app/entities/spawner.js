@@ -1,23 +1,32 @@
 import Enemy from './enemy';
+import random from '../util/random';
 
 var Spawner = function(game) {
   this.game = game;
-  this.record = game.record;
-  this.barrier = game.barrier;
 
-  this._spawnFrequency = 1200;
+  this._baseSpawnOffset = window.thirtyThree.startingSpawnOffset;
+  this._nextSpawnOffset = this.getNextSpawn();
 
   this._lastSpawnTime = Date.now();
   this._active = true;
   this._lastIncrease = 0;
+
+  this._lastSpawn = [];
+};
+
+Spawner.prototype.getNextSpawn = function() {
+  var randomWindowSize = window.thirtyThree.spawnOffsetVarianceWindow;
+  var negative = random(0, 1) === 1 ? 1 : -1;
+  return this._baseSpawnOffset + random(0, randomWindowSize) * negative;
 };
 
 Spawner.prototype.update = function() {
   if ( this._active ) {
     var now = Date.now();
-    if ( now > this._lastSpawnTime + this._spawnFrequency) {
+    if ( now > this._lastSpawnTime + this._nextSpawnOffset) {
+      this.spawn(this._nextSpawnOffset);
       this._lastSpawnTime = now;
-      this.spawn();
+      this._nextSpawnOffset = this.getNextSpawn();
     }
   }
 
@@ -26,29 +35,46 @@ Spawner.prototype.update = function() {
        this._spawnFrequency > 500 ) {
     this._spawnFrequency -= 100;
     this._lastIncrease = this.game.score;
-    console.log(this._spawnFrequency);
   }
 };
 
-Spawner.prototype.spawn = function() {
-  this.createRandomEntity(Enemy);
+Spawner.prototype.illegalSpawn = function(spawnLanes) {
+  // avoid creating the following pattern:
+  // ---O
+  // O---
+  return (
+    (
+      _.intersection(spawnLanes, [1,2,3]).length === 3 &&
+      _.intersection(this._lastSpawn, [0,1,2]).length === 3
+    ) || (
+      _.intersection(spawnLanes, [0,1,2]).length === 3 &&
+      _.intersection(this._lastSpawn, [1,2,3]).length === 3
+    )
+  );
+
 };
 
-Spawner.prototype.createRandomEntity = function(Entity) {
-  var lanesOpen = [0, 1, 2, 3];
+Spawner.prototype.spawn = function(lastSpawnOffset) {
+  var lanes = [0, 1, 2, 3];
+  var numToSpawn = random(2, 3);
+  var spawnLanes = _.sample(lanes, numToSpawn);
 
-  var numToSpawn = Math.floor(Math.random() * 2) + 2;
+  if ( lastSpawnOffset < 700 ) {
+    if ( this.illegalSpawn(spawnLanes) ) {
+      this.spawn(lastSpawnOffset);
+      return;
+    }
+  }
 
-  for (var i = 0; i < numToSpawn; i++) {
-    var lane = _.sample(lanesOpen, 1)[0];
-    lanesOpen = _.without(lanesOpen, lane);
-
-    this.game.c.entities.create(Entity, {
-      record: this.record,
+  spawnLanes.forEach(function(lane) {
+    this.game.c.entities.create(Enemy, {
+      record: this.game.record,
       lane: lane,
-      angle: this.barrier.angleFromCenter * (Math.PI/180)
+      angle: this.game.barrier.angleFromCenter * (Math.PI/180)
     });
-  }
+  }.bind(this));
+
+  this._lastSpawn = spawnLanes;
 };
 
 export default Spawner;
