@@ -1,0 +1,26 @@
+import SpawnerMixin from './mixins/spawner_mixin';
+import Target from './target';
+
+var TargetSpawner = function(game) {
+  this.game = game;
+
+  this.spawnerSetup({
+    spawnEntity: Target,
+    startingSpawnOffset: 1500,
+    spawnOffsetVariance: 0
+  });
+};
+
+_.extend(TargetSpawner.prototype, SpawnerMixin);
+
+TargetSpawner.prototype.update = function() {
+  this.spawnerUpdate();
+};
+
+TargetSpawner.prototype.spawn = function() {
+  var lanes = [0, 1, 2, 3];
+  var spawnLanes = _.sample(lanes, 1);
+  this.spawnForLanes(spawnLanes);
+};
+
+export default TargetSpawner;

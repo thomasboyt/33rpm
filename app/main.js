@@ -1,5 +1,3 @@
-import './globals';
-
 // Entities
 import Barrier from './entities/barrier';
 import Bullet from './entities/bullet';
@@ -7,10 +5,13 @@ import Enemy from './entities/enemy';
 import Label from './entities/label';
 import Player from './entities/player';
 import Record from './entities/record';
-import Spawner from './entities/spawner';
 import Target from './entities/target';
+
 import UI from './entities/ui/ui';
 import LoadingUI from './entities/ui/loading_ui';
+
+import TargetSpawner from './entities/target_spawner';
+import EnemySpawner from './entities/enemy_spawner';
 
 // Assets
 import assetPreloader from './util/asset_preloader';
@@ -108,7 +109,9 @@ Game.prototype.start = function() {
 
   this.player = this.c.entities.create(Player);
   this.barrier = this.c.entities.create(Barrier);
-  this.spawner = this.c.entities.create(Spawner);
+
+  this.enemySpawner = this.c.entities.create(EnemySpawner, {});
+  this.targetSpawner = this.c.entities.create(TargetSpawner, {});
 };
 
 Game.prototype.destroyAll = function() {

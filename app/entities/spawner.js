@@ -1,10 +1,13 @@
-import Enemy from './enemy';
 import random from '../util/random';
 
-var Spawner = function(game) {
+var Spawner = function(game, opts) {
   this.game = game;
 
-  this._baseSpawnOffset = window.thirtyThree.startingSpawnOffset;
+  this.entity = opts.entity;
+
+  this._baseSpawnOffset = opts.startingSpawnOffset;
+  this._spawnOffsetVariance = opts.spawnOffsetVariance;
+
   this._nextSpawnOffset = this.getNextSpawn();
 
   this._lastSpawnTime = Date.now();
@@ -15,7 +18,7 @@ var Spawner = function(game) {
 };
 
 Spawner.prototype.getNextSpawn = function() {
-  var randomWindowSize = window.thirtyThree.spawnOffsetVarianceWindow;
+  var randomWindowSize = this._spawnOffsetVariance;
   var negative = random(0, 1) === 1 ? 1 : -1;
   return this._baseSpawnOffset + random(0, randomWindowSize) * negative;
 };
@@ -67,7 +70,7 @@ Spawner.prototype.spawn = function(lastSpawnOffset) {
   }
 
   spawnLanes.forEach(function(lane) {
-    this.game.c.entities.create(Enemy, {
+    this.game.c.entities.create(this.entity, {
       record: this.game.record,
       lane: lane,
       angle: this.game.barrier.angleFromCenter * (Math.PI/180)
