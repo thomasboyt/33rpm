@@ -7,8 +7,8 @@ import Player from './entities/player';
 import Record from './entities/record';
 import Spawner from './entities/spawner';
 import Target from './entities/target';
-import UI from './entities/ui';
-import LoadingUI from './entities/loading_ui';
+import UI from './entities/ui/ui';
+import LoadingUI from './entities/ui/loading_ui';
 
 // Assets
 import assetPreloader from './util/asset_preloader';
