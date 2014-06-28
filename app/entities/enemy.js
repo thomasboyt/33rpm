@@ -29,10 +29,13 @@ _.extend(Enemy.prototype, RecordMixin);
 var OVERFLOW = 360 * (Math.PI/180);
 
 Enemy.prototype.update = function(step) {
-  this.angleFromCenter = (this.angleFromCenter - (c.THIRTY_THREE * step)) % OVERFLOW;
+  this.angleFromCenter = (this.angleFromCenter - (c.THIRTY_THREE * step));
 
   if ( this.angleFromCenter < -1 ) {
     this.hitImmunity = false;
+  }
+  if ( this.angleFromCenter < -OVERFLOW ) {
+    this.game.c.entities.destroy(this);
   }
 
   this.setPosition();
@@ -52,13 +55,7 @@ Enemy.prototype.draw = function(ctx) {
 };
 
 Enemy.prototype.collision = function(other) {
-
-  if ( other instanceof Barrier ) {
-    if ( !this.hitImmunity ) {
-      this.game.c.entities.destroy(this);
-    }
-
-  } else if ( other instanceof Player ) {
+  if ( other instanceof Player && ( !window.thirtyThree.godMode )) {
     this.game.fsm.died();
   }
 };
