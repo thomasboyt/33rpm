@@ -8,6 +8,7 @@ import Record from './entities/record';
 import Spawner from './entities/spawner';
 import Target from './entities/target';
 import UI from './entities/ui';
+import LoadingUI from './entities/loading_ui';
 
 // Assets
 import assetPreloader from './util/asset_preloader';
@@ -44,7 +45,10 @@ var Game = function() {
     }
   });
 
-  this.c.entities.create(UI, {});
+  this.loadingUI = this.c.entities.create(LoadingUI, {});
+
+  // hack to allow adding ?mute as QS to default to muted for debug sanity
+  var defaultMuted = document.location.search.match(/mute/) !== null;
 
   assetPreloader(assets, function(assets) {
     this.assets = assets;
@@ -54,9 +58,16 @@ var Game = function() {
       audio: audio,
       segments: [38, 104],
       ctx: this.audioCtx,
-      loadedCb: this.fsm.loaded.bind(this.fsm)
+      loadedCb: this.loaded.bind(this),
+      muted: defaultMuted
     });
   }.bind(this));
+};
+
+Game.prototype.loaded = function() {
+  this.c.entities.destroy(this.loadingUI);
+  this.c.entities.create(UI, {});
+  this.fsm.loaded();  // enter attract mode
 };
 
 Game.prototype.attract = function() {
@@ -75,6 +86,10 @@ Game.prototype.update = function() {
     if (this.c.inputter.isPressed(this.c.inputter.R)) {
       setTimeout(this.fsm.start.bind(this.fsm), 0);
     }
+  }
+
+  if ( this.c.inputter.isPressed(this.c.inputter.M) ) {
+    this.musicManager.toggleMute();
   }
 };
 
@@ -104,7 +119,6 @@ Game.prototype.destroyAll = function() {
 };
 
 Game.prototype.died = function() {
-  // pause action so you can see that you messed up
   this.destroyAll();
   this.spawner.clear();
   this.label.stop();
