@@ -1,3 +1,5 @@
+import globals from './globals';
+
 // Entities
 import Barrier from './entities/barrier';
 import Bullet from './entities/bullet';
@@ -115,7 +117,10 @@ Game.prototype.start = function() {
 };
 
 Game.prototype.destroyAll = function() {
-  [Player, Enemy, Bullet, Target, Spawner].forEach(function(constructor) {
+  this.c.entities.destroy(this.enemySpawner);
+  this.c.entities.destroy(this.targetSpawner);
+
+  [Player, Enemy, Bullet, Target].forEach(function(constructor) {
     var items = this.c.entities.all(constructor);
     items.forEach(function(item) {
       this.c.entities.destroy(item);

@@ -42,7 +42,7 @@ EnemySpawner.prototype.isIllegalSpawn = function(spawnLanes) {
 
 EnemySpawner.prototype.spawn = function(lastSpawnOffset) {
   var lanes = [0, 1, 2, 3];
-  var numToSpawn = random(2, 3);
+  var numToSpawn = random(1, 2);
   var spawnLanes = _.sample(lanes, numToSpawn);
 
   if ( lastSpawnOffset < 700 ) {
