@@ -40,7 +40,7 @@ index = HBSPages(index, {
     IS_PRODUCTION: IS_PRODUCTION
   },
   partials: null,
-  helpers: null
+  helpers: 'app/helpers/'
 });
 
 var data = pickFiles('data/', {
