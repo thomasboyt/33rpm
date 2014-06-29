@@ -1,5 +1,15 @@
 var config = {
 
+  assets: {
+    images: {
+      label: 'data/33rpm_1x.png',
+      mute: 'data/mute_1x.png'
+    },
+    audio: {
+      mirrorball: 'data/mirrorball.mp3'
+    }
+  },
+
   enemySpeedRad: 0.003456,
   labelSpeedRad: 0.003456,
   targetSpeedRad: 0.003456,
@@ -14,8 +24,6 @@ var config = {
   targetSpawnOffsetVariance: 0,
 
   speedUpPer: 7,
-
-  godMode: false,
 
   musicConfig: {
     bpm: 129,
