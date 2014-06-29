@@ -60,7 +60,7 @@ var Game = function() {
   var defaultMuted = document.location.search.match(/mute/) !== null;
   this.godMode = document.location.search.match(/godmode/) !== null;
 
-  assetPreloader(assets, function(assets) {
+  assetPreloader(assets).then(function(assets) {
     this.assets = assets;
     var audio = this.assets.audio['mirrorball'];
 

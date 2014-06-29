@@ -1,5 +1,9 @@
-export default function(assetCfg, onLoadedCb) {
+var q = require('q');
+
+export default function(assetCfg) {
   /* jshint loopfunc: true */
+
+  var dfd = q.defer();
 
   var assets = {
     'images': {},
@@ -12,36 +16,34 @@ export default function(assetCfg, onLoadedCb) {
   var numTotal = Object.keys(images).length + Object.keys(audio).length;
   var numLoaded = 0;
 
-  for ( var key in images ) {
+  _.each(images, function(src, name) {
     var img = new Image();
     img.onload = onAssetLoaded;
-    img.src = images[key];
+    img.src = src;
 
-    assets.images[key] = img;
-  }
+    assets.images[name] = img;
+  });
 
-  for ( var key in audio ) {
-    // IIFE to protect `xhr` from scoping shenangians
-    (function() {
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', audio[key], true);
-      xhr.responseType = 'arraybuffer';
+  _.each(audio, function(src, name) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', src, true);
+    xhr.responseType = 'arraybuffer';
 
-      xhr.onload = function() {
-        assets.audio[key] = xhr.response;
-        onAssetLoaded();
-      };
+    xhr.onload = function() {
+      assets.audio[name] = xhr.response;
+      onAssetLoaded();
+    };
 
-      xhr.send();
-    })();
-  }
+    xhr.send();
+  });
 
   function onAssetLoaded() {
     numLoaded += 1;
 
     if ( numTotal === numLoaded ) {
-      onLoadedCb(assets);
+      dfd.resolve(assets);
     }
   }
 
+  return dfd.promise;
 }
