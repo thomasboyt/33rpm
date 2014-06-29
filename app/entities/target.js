@@ -53,8 +53,12 @@ Enemy.prototype.collision = function(other) {
 
   if ( other instanceof Barrier ) {
     if ( !this.hitImmunity ) {
-      if ( this.lane === 3) {
-        this.game.fsm.died();
+      if ( this.lane === 3 ) {
+        this.game.c.entities.destroy(this);
+
+        if ( !window.thirtyThree.godMode ) {
+          this.game.fsm.died();
+        }
       } else {
         this.moveUpALane();
       }

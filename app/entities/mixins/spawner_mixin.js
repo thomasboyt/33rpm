@@ -14,13 +14,13 @@ var SpawnerMixin = {
 
     this._laslastSpawnOffsettSpawnLanes = [];
   },
-    
+
   _getNextSpawn: function() {
     var randomWindowSize = this._spawnOffsetVariance;
     var negative = random(0, 1) === 1 ? 1 : -1;
     return this._baseSpawnOffset + random(0, randomWindowSize) * negative;
   },
-  
+
   spawnerUpdate: function() {
     if ( this._active ) {
       var now = Date.now();

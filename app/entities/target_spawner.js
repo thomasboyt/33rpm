@@ -6,8 +6,8 @@ var TargetSpawner = function(game) {
 
   this.spawnerSetup({
     spawnEntity: Target,
-    startingSpawnOffset: 1500,
-    spawnOffsetVariance: 0
+    startingSpawnOffset: window.thirtyThree.targetStartingSpawnOffset,
+    spawnOffsetVariance: window.thirtyThree.targetSpawnOffsetVariance
   });
 };
 
@@ -18,7 +18,7 @@ TargetSpawner.prototype.update = function() {
 };
 
 TargetSpawner.prototype.spawn = function() {
-  var lanes = [0, 1, 2, 3];
+  var lanes = [0, 1, 2];
   var spawnLanes = _.sample(lanes, 1);
   this.spawnForLanes(spawnLanes);
 };

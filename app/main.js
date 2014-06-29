@@ -54,6 +54,7 @@ var Game = function() {
 
   // hack to allow adding ?mute as QS to default to muted for debug sanity
   var defaultMuted = document.location.search.match(/mute/) !== null;
+  window.thirtyThree.godMode = document.location.search.match(/godmode/) !== null;
 
   assetPreloader(assets, function(assets) {
     this.assets = assets;

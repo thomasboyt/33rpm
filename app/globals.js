@@ -1,5 +1,9 @@
 window.thirtyThree = {
-  startingSpawnOffset: 1200,
-  spawnOffsetVarianceWindow: 200,
+  barrierStartingSpawnOffset: 1200,
+  barrierSpawnOffsetVariance: 0,
+
+  targetStartingSpawnOffset: 1000,
+  targetSpawnOffsetVariance: 0,
+
   godMode: false
 };
