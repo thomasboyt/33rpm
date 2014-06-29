@@ -14,7 +14,7 @@ var MusicManager = function(opts) {
     this.volumeNode.gain.value = 0;
     this._isMuted = true;
   } else {
-    this.volumeNode.gain.value = 1;
+    this.volumeNode.gain.value = 0.5;
     this._isMuted = false;
   }
 
