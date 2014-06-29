@@ -11,6 +11,8 @@ var config = {
   targetStartingSpawnOffset: 2000,
   targetSpawnOffsetVariance: 0,
 
+  speedUpPer: 10,
+
   godMode: false
 
 };
