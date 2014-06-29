@@ -66,7 +66,7 @@ var Game = function() {
 
     this.musicManager = new MusicManager({
       audio: audio,
-      segments: [38, 104],
+      musicSettings: this.musicConfig,
       ctx: this.audioCtx,
       loadedCb: this.loaded.bind(this),
       muted: defaultMuted

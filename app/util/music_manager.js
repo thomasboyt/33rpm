@@ -1,7 +1,9 @@
 var MusicManager = function(opts) {
   this.ctx = opts.ctx;
-  this.segmentOffsets = opts.segments;
-  this.currentSegmentIdx = 0;
+
+  this.musicSettings = opts.musicSettings;
+  this._secondsPerBeat = 60 / this.musicSettings.bpm;
+  this._currentLoopIdx = 0;
 
   this.volumeNode = this.ctx.createGain();
   this.volumeNode.connect(this.ctx.destination);
@@ -21,16 +23,28 @@ var MusicManager = function(opts) {
   }.bind(this));
 };
 
+MusicManager.prototype.offsetsForLoop = function(loop) {
+  return [
+    this._secondsPerBeat * 4 * loop[0],
+    this._secondsPerBeat * 4 * loop[1]
+  ];
+};
+
 MusicManager.prototype.playNextSegment = function() {
   var src = this.ctx.createBufferSource();
   src.connect(this.volumeNode);
   src.buffer = this.buf;
 
-  src.start(0, this.segmentOffsets[this.currentSegmentIdx]);
+  var offsets = this.offsetsForLoop(this.musicSettings.loops[this._currentLoopIdx]);
 
-  this.currentSegmentIdx += 1;
-  if ( this.currentSegmentIdx > this.segmentOffsets.length - 1 ) {
-    this.currentSegmentIdx = 0;
+  src.loop = true;
+  src.loopStart = offsets[0];
+  src.loopEnd = offsets[1];
+  src.start(0, offsets[0]);
+
+  this._currentLoopIdx += 1;
+  if ( this._currentLoopIdx > this.musicSettings.loops.length - 1 ) {
+    this._currentLoopIdx = 0;
   }
 
   this.src = src;
