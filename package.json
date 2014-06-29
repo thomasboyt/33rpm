@@ -20,5 +20,8 @@
     "broccoli-browserify": "~0.1.0",
     "grunt-contrib-clean": "~0.5.0",
     "grunt-broccoli": "git://github.com/thomasboyt/grunt-broccoli#fix-missing-dest"
+  },
+  "dependencies": {
+    "q": "~1.0.1"
   }
 }

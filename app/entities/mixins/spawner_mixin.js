@@ -13,6 +13,10 @@ var SpawnerMixin = {
     this._lastIncrease = 0;
 
     this._laslastSpawnOffsettSpawnLanes = [];
+
+    if ( opts.immediate ) {
+      this.spawn(this._nextSpawnOffset);
+    }
   },
 
   _getNextSpawn: function() {

@@ -7,7 +7,8 @@ var TargetSpawner = function(game) {
   this.spawnerSetup({
     spawnEntity: Target,
     startingSpawnOffset: this.game.targetStartingSpawnOffset,
-    spawnOffsetVariance: this.game.targetSpawnOffsetVariance
+    spawnOffsetVariance: this.game.targetSpawnOffsetVariance,
+    immediate: true
   });
 };
 

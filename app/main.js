@@ -104,8 +104,6 @@ Game.prototype.update = function() {
 };
 
 Game.prototype.start = function() {
-  this.musicManager.playNextSegment();
-
   if (this.barrier) {
     this.c.entities.destroy(this.barrier);
   }
@@ -117,8 +115,11 @@ Game.prototype.start = function() {
   this.player = this.c.entities.create(Player);
   this.barrier = this.c.entities.create(Barrier);
 
-  this.enemySpawner = this.c.entities.create(EnemySpawner, {});
-  this.targetSpawner = this.c.entities.create(TargetSpawner, {});
+  this.musicManager.start()
+    .then(function() {
+      this.enemySpawner = this.c.entities.create(EnemySpawner, {});
+      this.targetSpawner = this.c.entities.create(TargetSpawner, {});
+    }.bind(this));
 };
 
 Game.prototype.destroyAll = function() {

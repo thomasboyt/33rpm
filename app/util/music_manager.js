@@ -1,3 +1,5 @@
+var q = require('q');
+
 var MusicManager = function(opts) {
   this.ctx = opts.ctx;
 
@@ -16,6 +18,8 @@ var MusicManager = function(opts) {
     this._isMuted = false;
   }
 
+  this._playedIntro = false;
+
   this.ctx.decodeAudioData(opts.audio, function(buf) {
     this.buf = buf;
 
@@ -30,24 +34,59 @@ MusicManager.prototype.offsetsForLoop = function(loop) {
   ];
 };
 
-MusicManager.prototype.playNextSegment = function() {
+MusicManager.prototype._playIntro = function() {
+  var dfd = q.defer();
+
   var src = this.ctx.createBufferSource();
   src.connect(this.volumeNode);
   src.buffer = this.buf;
 
-  var offsets = this.offsetsForLoop(this.musicSettings.loops[this._currentLoopIdx]);
+  var intro = this.offsetsForLoop(this.musicSettings.intros[0]);
+  src.loop = false;
+  src.start(0, intro[0], intro[1]-intro[0]);
+
+  src.onended = function() {
+    dfd.resolve();
+  };
+
+  this.src = src;
+  this._playedIntro = true;
+
+  return dfd.promise;
+};
+
+MusicManager.prototype._playLoop = function(loop) {
+  var src = this.ctx.createBufferSource();
+  src.connect(this.volumeNode);
+  src.buffer = this.buf;
+
+  var offsets = this.offsetsForLoop(loop);
 
   src.loop = true;
   src.loopStart = offsets[0];
   src.loopEnd = offsets[1];
   src.start(0, offsets[0]);
 
+  this.src = src;
+};
+
+MusicManager.prototype._playNextSegment = function() {
+  this._playLoop(this.musicSettings.loops[this._currentLoopIdx]);
   this._currentLoopIdx += 1;
   if ( this._currentLoopIdx > this.musicSettings.loops.length - 1 ) {
     this._currentLoopIdx = 0;
   }
+};
 
-  this.src = src;
+MusicManager.prototype.start = function() {
+  if ( this._playedIntro ){
+    this._playNextSegment();
+    return q.resolve();
+  }
+
+  var promise = this._playIntro();
+  promise.done(this._playNextSegment.bind(this));
+  return promise;
 };
 
 MusicManager.prototype.stop = function() {

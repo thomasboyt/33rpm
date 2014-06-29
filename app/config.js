@@ -17,7 +17,14 @@ var config = {
 
   musicConfig: {
     bpm: 129,
-    intro: [20, 24],
+
+    // only one of these is used for now, but I keep the rest around for funsies
+    intros: [
+      [20, 24],
+      [52, 56],
+      [92, 96]
+    ],
+
     loops: [
       [24, 36],
       [96, 112],
