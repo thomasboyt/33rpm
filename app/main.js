@@ -16,7 +16,7 @@ import TargetSpawner from './entities/target_spawner';
 import EnemySpawner from './entities/enemy_spawner';
 
 // Assets
-import assetPreloader from './util/asset_preloader';
+import AssetPreloader from './util/asset_preloader';
 
 // Misc
 import retinaFix from './util/retina_fix';
@@ -59,7 +59,9 @@ var Game = function() {
   var defaultMuted = document.location.search.match(/mute/) !== null;
   this.godMode = document.location.search.match(/godmode/) !== null;
 
-  assetPreloader(config.assets).then(function(assets) {
+  this.preloader = new AssetPreloader(config.assets);
+
+  this.preloader.load().then(function(assets) {
     this.assets = assets;
     var audio = this.assets.audio['mirrorball'];
 

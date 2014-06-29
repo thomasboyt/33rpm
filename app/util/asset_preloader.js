@@ -1,49 +1,53 @@
 var q = require('q');
 
-export default function(assetCfg) {
+var AssetPreloader = function(assetCfg) {
   /* jshint loopfunc: true */
 
-  var dfd = q.defer();
-
-  var assets = {
+  this.assets = {
     'images': {},
     'audio': {}
   };
 
-  var images = assetCfg.images;
-  var audio = assetCfg.audio;
+  this._images = assetCfg.images;
+  this._audio = assetCfg.audio;
 
-  var numTotal = Object.keys(images).length + Object.keys(audio).length;
-  var numLoaded = 0;
+  this.numTotal = _.keys(this._images).length + _.keys(this._audio).length;
+  this.numLoaded = 0;
+};
 
-  _.each(images, function(src, name) {
+AssetPreloader.prototype.load = function() {
+  this.dfd = q.defer();
+
+  _.each(this._images, function(src, name) {
     var img = new Image();
-    img.onload = onAssetLoaded;
+    img.onload = this.onAssetLoaded.bind(this);
     img.src = src;
 
-    assets.images[name] = img;
-  });
+    this.assets.images[name] = img;
+  }.bind(this));
 
-  _.each(audio, function(src, name) {
+  _.each(this._audio, function(src, name) {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', src, true);
     xhr.responseType = 'arraybuffer';
 
     xhr.onload = function() {
-      assets.audio[name] = xhr.response;
-      onAssetLoaded();
-    };
+      this.assets.audio[name] = xhr.response;
+      this.onAssetLoaded();
+    }.bind(this);
 
     xhr.send();
-  });
+  }.bind(this));
 
-  function onAssetLoaded() {
-    numLoaded += 1;
+  return this.dfd.promise;
+};
 
-    if ( numTotal === numLoaded ) {
-      dfd.resolve(assets);
-    }
+AssetPreloader.prototype.onAssetLoaded = function() {
+  this.numLoaded += 1;
+
+  if ( this.numTotal === this.numLoaded ) {
+    this.dfd.resolve(this.assets);
   }
+};
 
-  return dfd.promise;
-}
+export default AssetPreloader;
