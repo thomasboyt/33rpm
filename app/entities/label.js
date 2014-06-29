@@ -1,5 +1,3 @@
-import c from '../constants';
-
 var Label = function(game) {
   this.center = game.record.center;
 
@@ -9,7 +7,7 @@ var Label = function(game) {
   this.angle = 0;
 
   this.rotSpeed = 0;
-  this.rotSpeedMax = c.THIRTY_THREE_DEG;
+  this.rotSpeedMax = game.labelSpeedRad;
   this.rotAccel = 0.6 / 1000;
   this.rotDeaccel = 0.3 / 1000;
 };

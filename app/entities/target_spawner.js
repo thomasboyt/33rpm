@@ -6,8 +6,8 @@ var TargetSpawner = function(game) {
 
   this.spawnerSetup({
     spawnEntity: Target,
-    startingSpawnOffset: window.thirtyThree.targetStartingSpawnOffset,
-    spawnOffsetVariance: window.thirtyThree.targetSpawnOffsetVariance
+    startingSpawnOffset: this.game.targetStartingSpawnOffset,
+    spawnOffsetVariance: this.game.targetSpawnOffsetVariance
   });
 };
 

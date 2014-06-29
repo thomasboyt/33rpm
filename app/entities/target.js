@@ -1,4 +1,3 @@
-import c from '../constants';
 import RecordMixin from './mixins/record_mixin';
 
 import Barrier from './barrier';
@@ -28,7 +27,7 @@ _.extend(Enemy.prototype, RecordMixin);
 var OVERFLOW = 360 * (Math.PI/180);
 
 Enemy.prototype.update = function(step) {
-  this.angleFromCenter = (this.angleFromCenter - (c.THIRTY_THREE * step)) % OVERFLOW;
+  this.angleFromCenter = (this.angleFromCenter - (this.game.targetSpeedRad * step)) % OVERFLOW;
 
   if ( this.angleFromCenter < -1 ) {
     this.hitImmunity = false;
@@ -56,7 +55,7 @@ Enemy.prototype.collision = function(other) {
       if ( this.lane === 3 ) {
         this.game.c.entities.destroy(this);
 
-        if ( !window.thirtyThree.godMode ) {
+        if ( !this.game.godMode ) {
           this.game.fsm.died();
         }
       } else {

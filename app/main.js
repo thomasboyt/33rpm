@@ -1,4 +1,4 @@
-import globals from './globals';
+import config from './config';
 
 // Entities
 import Barrier from './entities/barrier';
@@ -27,6 +27,10 @@ import MusicManager from './util/music_manager';
 var Game = function() {
   this.c = new Coquette(this, 'canvas', 600, 600, 'silver');
 
+  for ( var key in config ) {
+    this[key] = config[key];
+  }
+
   retinaFix(document.getElementById('canvas'));
 
   this.audioCtx = new AudioContext();
@@ -54,7 +58,7 @@ var Game = function() {
 
   // hack to allow adding ?mute as QS to default to muted for debug sanity
   var defaultMuted = document.location.search.match(/mute/) !== null;
-  window.thirtyThree.godMode = document.location.search.match(/godmode/) !== null;
+  this.godMode = document.location.search.match(/godmode/) !== null;
 
   assetPreloader(assets, function(assets) {
     this.assets = assets;

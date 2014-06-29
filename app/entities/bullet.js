@@ -1,4 +1,3 @@
-import c from '../constants';
 import RecordMixin from './mixins/record_mixin';
 
 var Bullet = function(game, opts) {
@@ -20,7 +19,7 @@ _.extend(Bullet.prototype, RecordMixin);
 
 Bullet.prototype.update = function(step) {
   var overflow = 360 * (Math.PI/180);
-  this.angleFromCenter = (this.angleFromCenter + (c.FORTY_FIVE * step)) % overflow;
+  this.angleFromCenter = (this.angleFromCenter + (this.game.bulletSpeedRad * step)) % overflow;
   this.setPosition();
 };
 

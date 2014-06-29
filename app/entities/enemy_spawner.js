@@ -7,8 +7,8 @@ var EnemySpawner = function(game) {
 
   this.spawnerSetup({
     spawnEntity: Enemy,
-    startingSpawnOffset: window.thirtyThree.barrierStartingSpawnOffset,
-    spawnOffsetVariance: window.thirtyThree.barrierSpawnOffsetVariance
+    startingSpawnOffset: this.game.barrierStartingSpawnOffset,
+    spawnOffsetVariance: this.game.barrierSpawnOffsetVariance
   });
 };
 

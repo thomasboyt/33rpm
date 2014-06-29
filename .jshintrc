@@ -20,6 +20,7 @@
     "StateMachine": false,
     "BezierEasing": false,
     "Dancer": false,
-    "AudioContext": false
+    "AudioContext": false,
+    "ThirtyThree": false
   }
 }
