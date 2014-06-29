@@ -7,7 +7,7 @@ var Label = function(game) {
   this.angle = 0;
 
   this.rotSpeed = 0;
-  this.rotSpeedMax = game.labelSpeedRad;
+  this.rotSpeedMax = game.labelSpeedRad * (180/Math.PI);
   this.rotAccel = 0.6 / 1000;
   this.rotDeaccel = 0.3 / 1000;
 };
