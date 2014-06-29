@@ -5,10 +5,10 @@ var config = {
   targetSpeedRad: 0.003456,
   bulletSpeedRad: 0.004712,
 
-  barrierStartingSpawnOffset: 1200,
+  barrierStartingSpawnOffset: 1300,
   barrierSpawnOffsetVariance: 0,
 
-  targetStartingSpawnOffset: 1000,
+  targetStartingSpawnOffset: 2000,
   targetSpawnOffsetVariance: 0,
 
   godMode: false
