@@ -27,6 +27,7 @@ Barrier.prototype.draw = function(ctx) {
 Barrier.prototype.collision = function(other) {
   if ( other instanceof Bullet ) {
     this.game.c.entities.destroy(other);
+    this.game.player.resetFireThrottle();
   }
 };
 

@@ -67,6 +67,7 @@ Enemy.prototype.collision = function(other) {
     this.game.c.entities.destroy(this);
     this.game.c.entities.destroy(other);
     this.game.score += 1;
+    this.game.player.resetFireThrottle();
   }
 };
 

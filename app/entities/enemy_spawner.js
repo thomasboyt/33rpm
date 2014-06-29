@@ -19,7 +19,7 @@ EnemySpawner.prototype.update = function() {
 
   if ( this.game.score > this._lastIncrease &&
        this.game.score % this.game.speedUpPer === 0 &&
-       this._baseSpawnOffset > 500 ) {
+       this._baseSpawnOffset > this.game.barrierMinSpawnOffset ) {
     this._baseSpawnOffset -= 100;
     this._lastIncrease = this.game.score;
     console.log(this._baseSpawnOffset);

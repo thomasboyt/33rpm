@@ -16,6 +16,8 @@ var Player = function(game) {
 
   this.center = {};
   this.setPosition();
+
+  this._canFire = true;
 };
 
 _.extend(Player.prototype, RecordMixin);
@@ -53,7 +55,11 @@ Player.prototype.draw = function(ctx) {
   ctx.closePath();
 };
 
-Player.prototype.shoot = _.throttle(function() {
+Player.prototype.shoot = function() {
+  if ( !this._canFire ) {
+    return;
+  }
+
   // bullets can only be in one lane or another, not in between (even if shot while player
   // is in between)
   var roundedLane = Math.round(this.lane);
@@ -63,6 +69,12 @@ Player.prototype.shoot = _.throttle(function() {
     lane: roundedLane,
     angleFromCenter: this.angleFromCenter + 5 * (Math.PI/180)
   });
-}, 250);
+
+  this._canFire = false;
+};
+
+Player.prototype.resetFireThrottle = function() {
+  this._canFire = true;
+};
 
 export default Player;
