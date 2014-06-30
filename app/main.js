@@ -146,14 +146,12 @@ Game.prototype.nextLevel = function() {
   var timeout = 3000;
   this.ui.displayLevelNotification(timeout);
 
-  this._updateSpawners();
-};
-
-Game.prototype._updateSpawners = function() {
   var step = (this.level - 1) * this.offsetStepPerLevel;
 
   this.enemySpawner.setSpawnOffset(this.barrierStartingSpawnOffset - step);
   this.targetSpawner.setSpawnOffset(this.targetStartingSpawnOffset - step);
+
+  this.enemySpawner.updateSpawnSettingsForLevel(this.level);
 };
 
 Game.prototype.destroyAll = function(constructors) {
