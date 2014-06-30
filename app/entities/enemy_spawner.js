@@ -2,13 +2,13 @@ import random from '../util/random';
 import SpawnerMixin from './mixins/spawner_mixin';
 import Enemy from './enemy';
 
-var EnemySpawner = function(game) {
+var EnemySpawner = function(game, opts) {
   this.game = game;
 
   this.spawnerSetup({
     spawnEntity: Enemy,
-    startingSpawnOffset: this.game.barrierStartingSpawnOffset,
-    spawnOffsetVariance: this.game.barrierSpawnOffsetVariance
+    spawnOffset: opts.spawnOffset,
+    spawnOffsetVariance: opts.spawnOffsetVariance
   });
 };
 
@@ -16,14 +16,6 @@ _.extend(EnemySpawner.prototype, SpawnerMixin);
 
 EnemySpawner.prototype.update = function() {
   this.spawnerUpdate();
-
-  if ( this.game.score > this._lastIncrease &&
-       this.game.score % this.game.speedUpPer === 0 &&
-       this._baseSpawnOffset > this.game.barrierMinSpawnOffset ) {
-    this._baseSpawnOffset -= 100;
-    this._lastIncrease = this.game.score;
-    console.log(this._baseSpawnOffset);
-  }
 };
 
 EnemySpawner.prototype.spawn = function() {

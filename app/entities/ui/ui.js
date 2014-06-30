@@ -9,29 +9,48 @@ UI.prototype.draw = function(ctx) {
   ctx.font = '24px Helvetica, sans-serif';
 
   if ( this.game.fsm.is('playing') ) {
-    this.drawScore(ctx);
+    this._drawScore(ctx);
+    if ( this._showLevelNotification ) {
+      this._drawLevelNotification(ctx);
+    }
+
   } else if ( this.game.fsm.is('attract') ) {
     ctx.textAlign = 'center';
     ctx.fillText('[space] to start', 300, 580);
+
   } else if ( this.game.fsm.is('dead') ) {
     ctx.textAlign = 'center';
     ctx.fillText('game over :( press [R] to restart', 300, 580);
-    this.drawScore(ctx);
+    this._drawScore(ctx);
+
   }
 
-  this.drawMute(ctx);
+  this._drawMute(ctx);
 };
 
-UI.prototype.drawScore = function(ctx) {
+UI.prototype._drawScore = function(ctx) {
   ctx.textAlign = 'right';
   var score = this.game.score !== undefined ? this.game.score + '' : '';
   ctx.fillText(score, 585, 580);
 };
 
-UI.prototype.drawMute = function(ctx) {
+UI.prototype._drawMute = function(ctx) {
   if ( this.game.musicManager.isMuted() ) {
     ctx.drawImage(this.muteImage, 10, 545);
   }
+};
+
+UI.prototype._drawLevelNotification = function(ctx) {
+  ctx.textAlign = 'center';
+  ctx.fillText('level ' + this.game.level, 300, 580);
+};
+
+UI.prototype.displayLevelNotification = function(timeout) {
+  this._showLevelNotification = true;
+
+  setTimeout(function() {
+    this._showLevelNotification = false;
+  }.bind(this), timeout);
 };
 
 export default UI;

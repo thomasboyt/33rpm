@@ -17,13 +17,13 @@ var config = {
 
   barrierStartingSpawnOffset: 1200,
   barrierMinSpawnOffset: 700,
-  barrierSpawnOffsetVariance: 0,
 
   targetStartingSpawnOffset: 2000,
   targetMinSpawnOffset: 1000,
-  targetSpawnOffsetVariance: 0,
 
-  speedUpPer: 7,
+  offsetStepPerLevel: 100,
+
+  pointsPerLevel: 7,
 
   musicConfig: {
     bpm: 129,

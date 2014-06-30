@@ -3,8 +3,8 @@ import random from '../../util/random';
 var SpawnerMixin = {
   spawnerSetup: function(opts) {
     this._spawnType = opts.spawnEntity;
-    this._baseSpawnOffset = opts.startingSpawnOffset;
-    this._spawnOffsetVariance = opts.spawnOffsetVariance;
+    this._baseSpawnOffset = opts.spawnOffset;
+    this._spawnOffsetVariance = opts.spawnOffsetVariance || 0;
 
     this._nextSpawnOffset = this._getNextSpawn();
 
@@ -46,6 +46,10 @@ var SpawnerMixin = {
     }.bind(this));
 
     this._lastSpawnLanes = lanes;
+  },
+
+  setSpawnOffset: function(offset) {
+    this._baseSpawnOffset = offset;
   }
 
 };
