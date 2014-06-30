@@ -26,6 +26,9 @@ import MusicManager from './util/music_manager';
 var Game = function() {
   this.c = new Coquette(this, 'canvas', 600, 600, 'silver');
 
+  var score = localStorage.getItem('best');
+  this._highScore = score !== null ? parseInt(score, 10) : 0;
+
   for ( var key in config ) {
     this[key] = config[key];
   }
@@ -172,6 +175,11 @@ Game.prototype.died = function() {
   this.clearBoard();
   this.label.stop();
   this.musicManager.stop();
+
+  if ( this.score > this._highScore ) {
+    this._highScore = this.score;
+    localStorage.setItem('best', this.score);
+  }
 };
 
 
