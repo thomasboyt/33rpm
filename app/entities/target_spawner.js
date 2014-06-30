@@ -19,7 +19,7 @@ TargetSpawner.prototype.update = function() {
 };
 
 TargetSpawner.prototype.spawn = function() {
-  var lanes = [0, 1, 2];
+  var lanes = [0, 1, 2, 3];
   var spawnLanes = _.sample(lanes, 1);
   this.spawnForLanes(spawnLanes);
 };

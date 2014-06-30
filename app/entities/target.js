@@ -2,6 +2,7 @@ import RecordMixin from './mixins/record_mixin';
 
 import Barrier from './barrier';
 import Bullet from './bullet';
+import Player from './player';
 
 var Enemy = function(game, opts) {
   this.game = game;
@@ -39,9 +40,12 @@ Enemy.prototype.update = function(step) {
 };
 
 Enemy.prototype.draw = function(ctx) {
-  ctx.fillStyle = 'skyblue';
+  if ( this.isBarrier ) {
+    ctx.fillStyle = 'red';
+  } else {
+    ctx.fillStyle = 'skyblue';
+  }
 
-  // draw a triangle
   ctx.beginPath();
   ctx.arc(this.center.x, this.center.y, 10, 0, 360);
   ctx.fill();
@@ -50,24 +54,19 @@ Enemy.prototype.draw = function(ctx) {
 
 Enemy.prototype.collision = function(other) {
 
-  if ( other instanceof Barrier ) {
-    if ( !this.hitImmunity ) {
-      if ( this.lane === 3 ) {
-        this.game.c.entities.destroy(this);
+  if ( other instanceof Barrier && !this.isBarrier && !this.hitImmunity ) {
+    this.isBarrier = true;
 
-        if ( !this.game.godMode ) {
-          this.game.fsm.died();
-        }
-      } else {
-        this.moveUpALane();
-      }
-    }
-
-  } else if ( other instanceof Bullet ) {
+  } else if ( other instanceof Bullet && !this.isBarrier ) {
     this.game.c.entities.destroy(this);
     this.game.c.entities.destroy(other);
     this.game.score += 1;
     this.game.player.resetFireThrottle();
+
+  } else if ( other instanceof Player && this.isBarrier ) {
+    if ( !this.game.godMode ) {
+      this.game.fsm.died();
+    }
   }
 };
 

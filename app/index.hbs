@@ -34,7 +34,7 @@
       .barrier {
         color: pink;
       }
-      .spawner {
+      .spawner, .evil-dot {
         color: red;
       }
     </style>
@@ -61,8 +61,7 @@
       <p>
         shoot the <span class="dot">dots</span> for points. <br/>
         avoid the <span class="barrier">barriers</span>. <br/>
-        when <span class="dot">dots</span> hit the <span class="spawner">barrier line</span>, they'll move one lane inward. <br/>
-        if a <span class="dot">dot</span> on the innermost lane hits the <span class="spawner">line</span>, you lose.
+        when <span class="dot">dots</span> hit the <span class="spawner">barrier line</span>, they'll become <span class="evil-dot">evil</span>, and you should avoid hitting them.<br/>
       </p>
 
       <h2>CONTROLS</h2>
