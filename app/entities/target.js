@@ -54,14 +54,20 @@ Enemy.prototype.draw = function(ctx) {
 
 Enemy.prototype.collision = function(other) {
 
-  if ( other instanceof Barrier && !this.isBarrier && !this.hitImmunity ) {
-    this.isBarrier = true;
+  if ( other instanceof Barrier && !this.hitImmunity ) {
+    if ( !this.isBarrier ) {
+      this.isBarrier = true;
+    }
 
   } else if ( other instanceof Bullet && !this.isBarrier ) {
     this.game.c.entities.destroy(this);
     this.game.c.entities.destroy(other);
     this.game.score += 1;
     this.game.player.resetFireThrottle();
+
+    if ( this.game.score % this.game.pointsPerLevel === 0 ) {
+      this.game.nextLevel();
+    }
 
   } else if ( other instanceof Player && this.isBarrier ) {
     if ( !this.game.godMode ) {

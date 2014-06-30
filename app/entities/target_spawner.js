@@ -1,13 +1,13 @@
 import SpawnerMixin from './mixins/spawner_mixin';
 import Target from './target';
 
-var TargetSpawner = function(game) {
+var TargetSpawner = function(game, opts) {
   this.game = game;
 
   this.spawnerSetup({
     spawnEntity: Target,
-    startingSpawnOffset: this.game.targetStartingSpawnOffset,
-    spawnOffsetVariance: this.game.targetSpawnOffsetVariance,
+    spawnOffset: opts.spawnOffset,
+    spawnOffsetVariance: opts.spawnOffsetVariance,
     immediate: true
   });
 };

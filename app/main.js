@@ -83,7 +83,7 @@ var Game = function() {
 
 Game.prototype.loaded = function() {
   this.c.entities.destroy(this.loadingUI);
-  this.c.entities.create(UI, {});
+  this.ui = this.c.entities.create(UI, {});
   this.fsm.loaded();  // enter attract mode
 };
 
@@ -108,6 +108,7 @@ Game.prototype.update = function() {
   if ( this.c.inputter.isPressed(this.c.inputter.M) ) {
     this.musicManager.toggleMute();
   }
+
 };
 
 Game.prototype.start = function() {
@@ -122,18 +123,45 @@ Game.prototype.start = function() {
   this.player = this.c.entities.create(Player);
   this.barrier = this.c.entities.create(Barrier);
 
+  this.level = 1;
+
   this.musicManager.start()
-    .then(function() {
-      this.enemySpawner = this.c.entities.create(EnemySpawner, {});
-      this.targetSpawner = this.c.entities.create(TargetSpawner, {});
+    .done(function() {
+      this._createSpawners();
     }.bind(this));
 };
 
-Game.prototype.destroyAll = function() {
+Game.prototype.nextLevel = function() {
+  this.level += 1;
+
   this.c.entities.destroy(this.enemySpawner);
   this.c.entities.destroy(this.targetSpawner);
 
-  [Player, Enemy, Bullet, Target].forEach(function(constructor) {
+  this.destroyAll([Target, Enemy]);
+
+  var timeout = 3000;
+  this.ui.displayLevelNotification(timeout);
+
+  setTimeout(function() {
+    this._createSpawners();
+  }.bind(this), timeout);
+};
+
+Game.prototype._createSpawners = function() {
+
+  var step = (this.level - 1) * this.offsetStepPerLevel;
+
+  this.enemySpawner = this.c.entities.create(EnemySpawner, {
+    spawnOffset: this.barrierStartingSpawnOffset - step
+  });
+
+  this.targetSpawner = this.c.entities.create(TargetSpawner, {
+    spawnOffset: this.targetStartingSpawnOffset - step
+  });
+};
+
+Game.prototype.destroyAll = function(constructors) {
+  constructors.forEach(function(constructor) {
     var items = this.c.entities.all(constructor);
     items.forEach(function(item) {
       this.c.entities.destroy(item);
@@ -141,8 +169,14 @@ Game.prototype.destroyAll = function() {
   }.bind(this));
 };
 
+Game.prototype.clearBoard = function() {
+  this.c.entities.destroy(this.enemySpawner);
+  this.c.entities.destroy(this.targetSpawner);
+  this.destroyAll([Player, Enemy, Bullet, Target]);
+};
+
 Game.prototype.died = function() {
-  this.destroyAll();
+  this.clearBoard();
   this.label.stop();
   this.musicManager.stop();
 };
