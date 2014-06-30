@@ -55,8 +55,13 @@ var Game = function() {
 
   this.loadingUI = this.c.entities.create(LoadingUI, {});
 
-  // hack to allow adding ?mute as QS to default to muted for debug sanity
+  // ?mute: mute by default
   var defaultMuted = document.location.search.match(/mute/) !== null;
+
+  // ?disablemusic: disable music manager entirely (no music + skip intro gap)
+  var disableMusicManager = document.location.search.match(/disablemusic/) !== null;
+
+  // ?godmode: god mode, duh
   this.godMode = document.location.search.match(/godmode/) !== null;
 
   this.preloader = new AssetPreloader(config.assets);
@@ -70,7 +75,8 @@ var Game = function() {
       musicSettings: this.musicConfig,
       ctx: this.audioCtx,
       loadedCb: this.loaded.bind(this),
-      muted: defaultMuted
+      muted: defaultMuted,
+      disabled: disableMusicManager
     });
   }.bind(this));
 };

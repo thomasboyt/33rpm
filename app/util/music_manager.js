@@ -1,6 +1,14 @@
 var q = require('q');
 
 var MusicManager = function(opts) {
+  this.disabled = opts.disabled;
+
+  if ( this.disabled ) {
+    this._playedIntro = true;
+    opts.loadedCb();
+    return;
+  }
+
   this.ctx = opts.ctx;
 
   this.musicSettings = opts.musicSettings;
@@ -79,6 +87,10 @@ MusicManager.prototype._playNextSegment = function() {
 };
 
 MusicManager.prototype.start = function() {
+  if ( this.disabled ) {
+    return q.resolve();
+  }
+
   if ( this._playedIntro ){
     this._playNextSegment();
     return q.resolve();
@@ -90,6 +102,10 @@ MusicManager.prototype.start = function() {
 };
 
 MusicManager.prototype.stop = function() {
+  if ( this.disabled ) {
+    return;
+  }
+
   this.src.stop();
 };
 
