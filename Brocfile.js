@@ -8,12 +8,13 @@ var mergeTrees = require('broccoli-merge-trees');
 
 var IS_PRODUCTION = require('broccoli-env').getEnv() === 'production';
 
-var makeModules = require('broccoli-es6-module-filter');
+var makeModules = require('broccoli-compile-modules');
 var browserify = require('broccoli-browserify');
 
 var modules = makeModules('app', {
-  moduleType: 'cjs',
-  compatFix: true
+  inputFiles: ['**/*.js'],
+  output: '/',
+  formatter: 'commonjs',
 });
 
 var appJs = browserify(modules, {
