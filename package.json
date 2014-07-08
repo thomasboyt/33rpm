@@ -20,8 +20,7 @@
     "broccoli-browserify": "~0.1.0",
     "grunt-contrib-clean": "~0.5.0",
     "grunt-broccoli": "git://github.com/thomasboyt/grunt-broccoli#fix-missing-dest",
-    "broccoli-filter": "~0.1.6",
-    "broccoli-compile-modules": "git://github.com/eventualbuddha/broccoli-compile-modules.git"
+    "broccoli-compile-modules": "git://github.com/thomasboyt/broccoli-compile-modules.git#caching"
   },
   "dependencies": {
     "q": "~1.0.1"
